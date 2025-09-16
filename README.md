@@ -22,4 +22,4 @@ Avaliação de Moradias de Estudantes é um aplicativo móvel, desenvolvido para
 
 ## 4. Diagrama de Casos de Uso
 
-
+![Diagrama de Casos de Uso](docs/casos-de-uso.png)
