@@ -35,11 +35,3 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10, backgroundColor: '#fff' },
-  title: { fontSize: 28, fontWeight: 'bold', margin: 20, textAlign: 'center' },
-  card: { flexDirection: 'row', padding: 15, marginBottom: 10, backgroundColor: '#f9f9f9', borderRadius: 10, alignItems: 'center' },
-  cardImage: { width: 80, height: 80, borderRadius: 10, marginRight: 15 },
-  cardTitle: { fontSize: 18, fontWeight: 'bold' },
-  link: { textAlign: 'center', color: '#007bff', margin: 5},
-});

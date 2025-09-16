@@ -1,9 +1,8 @@
-
 import { Link } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 
-export default function ProfileScreen() { 
+export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Tela de Perfil</Text> {/* Mude para Tela de Filtro */}

@@ -1,16 +1,16 @@
-# App de Avaliação de Moradias de Estudantes 🏡
+# AvaliateStudents 🏡
 
 ## 1. Descrição do Projeto
 
-Avaliação de Moradias de Estudantes é um aplicativo móvel, desenvolvido para a disciplina de Programação para Dispositivos Móveis, que visa criar uma plataforma para estudantes encontrarem, visualizarem e avaliarem moradias universitárias. O projeto facilita a busca por um novo lar, trazendo mais transparência e segurança para a comunidade estudantil.
+AvaliateStudents é um aplicativo móvel, desenvolvido para a disciplina de Programação para Dispositivos Móveis, que visa criar uma plataforma para estudantes encontrarem, visualizarem e avaliarem moradias universitárias. O projeto facilita a busca por um novo lar, trazendo mais transparência e segurança para a comunidade estudantil.
 
 ## 2. Funcionalidades (Entrega 1)
 
-- [x] Cadastro e Login de usuários (Estudantes).
-- [x] Visualização de uma lista de moradias com dados estáticos ("mockados").
-- [x] Tela de detalhes para cada moradia.
-- [x] Esqueleto das telas de Perfil e Filtro.
-- [x] Navegação funcional entre todas as 6 telas implementadas.
+- [ ] Cadastro e Login de usuários (Estudantes).
+- [ ] Visualização de uma lista de moradias com dados estáticos ("mockados").
+- [ ] Tela de detalhes para cada moradia.
+- [ ] Esqueleto das telas de Perfil e Filtro.
+- [ ] Navegação funcional entre as telas implementadas.
 
 ## 3. Tecnologias Utilizadas
 
