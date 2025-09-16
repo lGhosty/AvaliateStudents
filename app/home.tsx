@@ -1,6 +1,7 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // DADOS MOCKADOS (ESTÁTICOS)
 const MORADIAS = [
@@ -12,10 +13,13 @@ const MORADIAS = [
 export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Encontre seu Lar</Text>
-      {/* Adicione links para Perfil e Filtro aqui */}
-      <Link href="/profile" style={styles.link}>Ir para Perfil</Link>
-      <Link href="/filter" style={styles.link}>Filtrar</Link>
+      <View style={styles.header}>
+        <Text style={styles.title}>Encontre seu Lar</Text>
+        <View style={styles.navLinks}>
+          <Link href="/profile" style={styles.link}>Perfil</Link>
+          <Link href="/filter" style={styles.link}>Filtrar</Link>
+        </View>
+      </View>
       <FlatList
         data={MORADIAS}
         keyExtractor={(item) => item.id}
@@ -23,10 +27,10 @@ export default function HomeScreen() {
           <Link href="/details" asChild>
             <TouchableOpacity style={styles.card}>
               <Image source={{ uri: item.img }} style={styles.cardImage} />
-              <View>
+              <View style={styles.cardTextContainer}>
                 <Text style={styles.cardTitle}>{item.nome}</Text>
                 <Text>{item.preco}</Text>
-                <Text>Nota: {item.nota} ★</Text>
+                <Text>Nota: {item.nota.toString()} ★</Text>
               </View>
             </TouchableOpacity>
           </Link>
@@ -35,3 +39,29 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
+
+// ESTE BLOCO ESTAVA FALTANDO
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#f5f5f5' },
+  header: { paddingTop: 20, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#ddd' },
+  title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 },
+  navLinks: { flexDirection: 'row', justifyContent: 'space-around' },
+  link: { textAlign: 'center', color: '#007bff', fontSize: 16 },
+  card: {
+    flexDirection: 'row',
+    padding: 15,
+    marginHorizontal: 10,
+    marginTop: 10,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+  cardImage: { width: 80, height: 80, borderRadius: 10, marginRight: 15 },
+  cardTextContainer: { flex: 1 },
+  cardTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5 },
+});

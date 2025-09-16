@@ -1,26 +1,26 @@
-import { Link, useLocalSearchParams } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function DetailsScreen() {
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={{ uri: 'https://via.placeholder.com/400' }} style={styles.mainImage} />
-      <Text style={styles.title}>República Centro</Text>
-      <Text style={styles.price}>R$ 550/mês</Text>
-      <Text style={styles.description}>
-        Descrição completa da moradia, com detalhes sobre os quartos,
-        áreas comuns, regras da casa e informações de contato.
-      </Text>
-       <Link href="/home" style={styles.link}>Voltar para a lista</Link>
+      <Text style={styles.title}>Tela de Detalhes</Text>
+      <Text style={styles.text}>A navegação para esta tela funcionou.</Text>
+      <TouchableOpacity onPress={() => router.back()} style={styles.button}>
+        <Text style={styles.buttonText}>Voltar</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#fff' },
-    mainImage: { width: '100%', height: 250 },
-    title: { fontSize: 28, fontWeight: 'bold', margin: 20 },
-    price: { fontSize: 22, color: 'green', marginHorizontal: 20 },
-    description: { fontSize: 16, margin: 20, lineHeight: 24 },
-    link: { marginTop: 20, textAlign: 'center', color: '#007bff', fontSize: 16 },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
+  text: { fontSize: 16, marginBottom: 20 },
+  button: { backgroundColor: '#007bff', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 5 },
+  buttonText: { color: '#fff', fontSize: 18 },
 });
