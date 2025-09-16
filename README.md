@@ -23,3 +23,12 @@ AvaliateStudents é um aplicativo móvel, desenvolvido para a disciplina de Prog
 ## 4. Diagrama de Casos de Uso
 
 ![Diagrama de Casos de Uso](docs/casos-de-uso.png)
+
+
+---
+
+## 5. Protótipo (Figma)
+
+O protótipo navegável do projeto, com o fluxo de telas da primeira entrega, pode ser acessado no link abaixo.
+
+[➡️ Visualizar Protótipo do AvaliateStudents no Figma](https://www.figma.com/design/a7OVs61HbxlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=GlEIy3610zuiOu88-1)
