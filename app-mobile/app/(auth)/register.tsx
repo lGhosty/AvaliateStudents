@@ -1,19 +1,50 @@
 import { useRouter } from 'expo-router';
-import React from 'react';
-import { Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen() {
   const router = useRouter();
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+
+  const handleRegister = async () => {
+    if (!nome || !email || !senha) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://192.168.0.102:3333/api/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nome, email, senha }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Sucesso!', 'Conta criada com sucesso. Agora faça o login.');
+        router.back();
+      } else {
+        Alert.alert('Erro no Cadastro', data.message || 'Não foi possível criar a conta.');
+      }
+    } catch (error) {
+      Alert.alert('Erro de Conexão', 'Não foi possível conectar ao servidor.');
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Crie sua Conta</Text>
-      <TextInput style={styles.input} placeholder="Nome Completo" />
-      <TextInput style={styles.input} placeholder="E-mail" keyboardType="email-address" autoCapitalize="none" />
-      <TextInput style={styles.input} placeholder="Senha" secureTextEntry />
+      <TextInput style={styles.input} placeholder="Nome Completo" value={nome} onChangeText={setNome} />
+      <TextInput style={styles.input} placeholder="E-mail" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
+      <TextInput style={styles.input} placeholder="Senha" value={senha} onChangeText={setSenha} secureTextEntry />
       
-      <TouchableOpacity style={styles.button} onPress={() => router.replace('/(tabs)/home')}>
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Cadastrar</Text>
       </TouchableOpacity>
       

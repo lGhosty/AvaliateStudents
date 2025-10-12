@@ -8,12 +8,31 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert("Erro", "Por favor, preencha e-mail e senha.");
       return;
     }
-    router.replace('/(tabs)/home');
+    
+    try {
+      const response = await fetch('http://192.168.0.102:3333/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, senha: password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        router.replace('/(tabs)/home');
+      } else {
+        Alert.alert('Erro no Login', data.message || 'Credenciais inválidas.');
+      }
+    } catch (error) {
+      Alert.alert('Erro de Conexão', 'Não foi possível conectar ao servidor.');
+    }
   };
 
   return (
@@ -37,7 +56,6 @@ export default function LoginScreen() {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
-
       <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
         <Text style={styles.link}>Não tem uma conta? Cadastre-se</Text>
       </TouchableOpacity>
