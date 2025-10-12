@@ -1,57 +1,60 @@
 import { useRouter } from 'expo-router';
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const [avatarUri, setAvatarUri] = useState<string | null>(null);
+
+  const handleChoosePhoto = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      Alert.alert("Permissão necessária", "É preciso permitir o acesso à galeria para escolher uma foto.");
+      return;
+    }
+      
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+      
+    if (!pickerResult.canceled) {
+      setAvatarUri(pickerResult.assets[0].uri);
+    }
+  };
+  
+  const handleLogout = () => {
+    router.replace('/(auth)');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Meu Perfil</Text>
       
-      <View style={styles.avatar}>
-        <Text style={styles.avatarText}>FH</Text>
-      </View>
-      
+      <TouchableOpacity onPress={handleChoosePhoto}>
+        {avatarUri ? (
+          <Image source={{ uri: avatarUri }} style={styles.avatar} />
+        ) : (
+          <View style={styles.avatarPlaceholder}>
+            <Text style={styles.avatarText}>FH</Text>
+          </View>
+        )}
+      </TouchableOpacity>
+      <Text style={styles.changePhotoText}>Alterar foto</Text>
       <Text style={styles.name}>Felipe Hapolo</Text>
       <Text style={styles.email}>fehapolo@email.com</Text>
-      
-      <TouchableOpacity style={styles.logoutButton}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutButtonText}>Sair (Logout)</Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>Voltar</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', backgroundColor: '#f5f5f5', paddingTop: 40 },
-  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 30 },
-  avatar: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#007bff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  avatarText: { color: '#fff', fontSize: 48, fontWeight: 'bold' },
-  name: { fontSize: 22, fontWeight: '600', marginBottom: 5 },
-  email: { fontSize: 16, color: 'gray', marginBottom: 40 },
-  logoutButton: {
-    borderColor: '#dc3545',
-    borderWidth: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-    marginBottom: 20,
-  },
-  logoutButtonText: { color: '#dc3545', fontSize: 16 },
-  backButton: { backgroundColor: '#6c757d', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 5 },
-  backButtonText: { color: '#fff', fontSize: 18 },
-});
+    container: { flex: 1, alignItems: 'center', backgroundColor: '#f5f5f5', paddingTop: 40 },
+    title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20 },
+    avatar: { width
