@@ -23,7 +23,6 @@ export default function HomeScreen() {
         data={MORADIAS}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          // A rota para details é global
           <Link href="/details" asChild>
             <TouchableOpacity style={styles.card}>
               <Image source={{ uri: item.img }} style={styles.cardImage} />

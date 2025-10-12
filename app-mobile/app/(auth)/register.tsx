@@ -12,9 +12,11 @@ export default function RegisterScreen() {
       <TextInput style={styles.input} placeholder="Nome Completo" />
       <TextInput style={styles.input} placeholder="E-mail" keyboardType="email-address" autoCapitalize="none" />
       <TextInput style={styles.input} placeholder="Senha" secureTextEntry />
+      
       <TouchableOpacity style={styles.button} onPress={() => router.replace('/(tabs)/home')}>
         <Text style={styles.buttonText}>Cadastrar</Text>
       </TouchableOpacity>
+      
       <TouchableOpacity onPress={() => router.back()}>
         <Text style={styles.link}>Já tem uma conta? Faça login</Text>
       </TouchableOpacity>

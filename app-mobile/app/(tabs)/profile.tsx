@@ -57,4 +57,12 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
     container: { flex: 1, alignItems: 'center', backgroundColor: '#f5f5f5', paddingTop: 40 },
     title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20 },
-    avatar: { width
+    avatar: { width: 120, height: 120, borderRadius: 60, marginBottom: 10, backgroundColor: '#ccc' },
+    avatarPlaceholder: { width: 120, height: 120, borderRadius: 60, backgroundColor: '#007bff', justifyContent: 'center', alignItems: 'center', marginBottom: 10 },
+    avatarText: { color: '#fff', fontSize: 48, fontWeight: 'bold' },
+    changePhotoText: { color: '#007bff', marginBottom: 30, fontSize: 16 },
+    name: { fontSize: 22, fontWeight: '600', marginBottom: 5 },
+    email: { fontSize: 16, color: 'gray', marginBottom: 40 },
+    logoutButton: { borderColor: '#dc3545', borderWidth: 1, paddingVertical: 10, paddingHorizontal: 30, borderRadius: 8, marginTop: 'auto', marginBottom: 20 },
+    logoutButtonText: { color: '#dc3545', fontSize: 16, fontWeight: 'bold' },
+});
