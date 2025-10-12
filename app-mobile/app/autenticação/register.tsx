@@ -1,23 +1,23 @@
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen() {
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Crie sua Conta</Text>
       <TextInput style={styles.input} placeholder="Nome Completo" />
       <TextInput style={styles.input} placeholder="E-mail" keyboardType="email-address" autoCapitalize="none" />
       <TextInput style={styles.input} placeholder="Senha" secureTextEntry />
-      <Link href="/home" asChild>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Cadastrar</Text>
-        </TouchableOpacity>
-      </Link>
-      <Link href="/" style={styles.link}>
-        Já tem uma conta? Faça login
-      </Link>
+      <TouchableOpacity style={styles.button} onPress={() => router.replace('/(tabs)/home')}>
+        <Text style={styles.buttonText}>Cadastrar</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.back()}>
+        <Text style={styles.link}>Já tem uma conta? Faça login</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
