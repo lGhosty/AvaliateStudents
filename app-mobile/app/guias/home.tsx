@@ -40,7 +40,6 @@ export default function HomeScreen() {
   );
 }
 
-// ESTE BLOCO ESTAVA FALTANDO
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5' },
   header: { paddingTop: 20, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#ddd' },

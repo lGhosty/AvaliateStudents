@@ -12,7 +12,9 @@ export default function FilterScreen() {
       
       <View style={styles.filterGroup}>
         <Text style={styles.filterLabel}>Faixa de Preço</Text>
-        {/* Aqui entraria um slider ou inputs de preço no futuro */}
+        {
+            
+        }
         <Text style={styles.filterValue}>Qualquer valor</Text>
       </View>
       
