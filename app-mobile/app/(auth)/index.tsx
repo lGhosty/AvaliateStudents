@@ -1,12 +1,14 @@
-import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from '../../context/AuthContext'; 
+import { useRouter } from 'expo-router';
 
 export default function LoginScreen() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = useAuth();
+  const router = useRouter();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -15,7 +17,7 @@ export default function LoginScreen() {
     }
     
     try {
-      const response = await fetch('http://192.168.0.102:3333/api/users/login', {
+      const response = await fetch(`http://192.168.0.102:3333/api/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,7 +28,7 @@ export default function LoginScreen() {
       const data = await response.json();
 
       if (response.ok) {
-        router.replace('/(tabs)/home');
+        login(data);
       } else {
         Alert.alert('Erro no Login', data.message || 'Credenciais inválidas.');
       }
@@ -62,6 +64,7 @@ export default function LoginScreen() {
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
     container: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#f5f5f5' },
