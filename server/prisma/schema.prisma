@@ -1,0 +1,42 @@
+// Conteúdo do arquivo: server/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id         Int         @id @default(autoincrement())
+  nome       String
+  email      String      @unique
+  senha      String
+  avatarUrl  String?
+  moradias   Moradia[]
+  avaliacoes Avaliacao[]
+}
+
+model Moradia {
+  id         Int         @id @default(autoincrement())
+  nome       String
+  endereco   String
+  descricao  String
+  preco      Float
+  imageUrl   String?
+  criador    Usuario     @relation(fields: [criadorId], references: [id])
+  criadorId  Int
+  avaliacoes Avaliacao[]
+}
+
+model Avaliacao {
+  id        Int       @id @default(autoincrement())
+  nota      Float
+  comentario String?
+  autor     Usuario   @relation(fields: [autorId], references: [id])
+  autorId   Int
+  moradia   Moradia   @relation(fields: [moradiaId], references: [id])
+  moradiaId Int
+}
