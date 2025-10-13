@@ -70,5 +70,5 @@ Para esta entrega, foram implementados 4 casos de uso principais no back-end, co
 
 ## 5. Documentação de Apoio
 
--   **Diagrama de Casos de Uso:** `/docs/casos-de-uso.png`
+-   **Diagrama de Casos de Uso:** (docs/casos-de-uso.png)
 -   **Diagrama de Classes:** `/docs/diagrama-de-classes.png`
