@@ -71,6 +71,6 @@ Para esta entrega, foram implementados 4 casos de uso principais no back-end, co
 ## 5. Documentação de Apoio
 
 ### Diagrama de Casos de Uso
-![Diagrama de Casos de Uso do Sistema](docs/casos-de-uso.png)
+![Diagrama de Casos de Uso do Sistema](./app-mobile/docs/casos-de-uso.png)
 
 ### Protótipo Navegável:[➡️ Visualizar Protótipo no Figma](https://www.figma.com/design/a7OVs61HbxlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=GlEIy3610zuiOu88-1)
