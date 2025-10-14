@@ -61,9 +61,11 @@ Este projeto cumpre todos os requisitos da Entrega 02 de Programação para Disp
 ---
 
 🚀 Guia de Instalação e Execução
-Siga este guia para rodar o projeto em uma nova máquina.
+Siga este guia para configurar e rodar o projeto em sua máquina local.
 
 Passo 1: Pré-requisitos
+
+Antes de começar, garanta que você tenha as seguintes ferramentas instaladas:
 
 Node.js (v18+)
 
@@ -73,12 +75,16 @@ Docker (Recomendado para o banco de dados)
 
 Passo 2: Clonar o Repositório
 
+Use o Git para clonar o projeto e acesse o diretório criado:
+
 Bash
 git clone https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git
 cd SEU-REPOSITORIO
 Passo 3: Configurar o Back-end (API)
 
-Navegue até a pasta do servidor:
+⚙️ No primeiro terminal, vamos configurar e iniciar o servidor.
+
+Acesse a pasta do servidor:
 
 Bash
 cd server
@@ -87,16 +93,17 @@ Instale as dependências:
 Bash
 npm install
 Inicie o Banco de Dados com Docker:
-O comando abaixo cria e roda um container PostgreSQL pronto para uso.
+O comando abaixo cria e executa um container PostgreSQL pronto para uso.
 
 Bash
 docker run --name pg-avaliate -e POSTGRES_USER=docker -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=avaliatestudents -p 5432:5432 -d postgres
 Configure as Variáveis de Ambiente:
 Crie um arquivo .env na pasta server com a seguinte linha:
 
+Snippet de código
 DATABASE_URL="postgresql://docker:docker@localhost:5432/avaliatestudents"
 Crie as Tabelas no Banco:
-Este comando usa o Prisma para criar a estrutura do banco.
+Este comando usa o Prisma para criar a estrutura do banco de dados.
 
 Bash
 npx prisma db push
@@ -108,9 +115,9 @@ npm run dev
 
 Passo 4: Configurar o Front-end (App)
 
-Abra um novo terminal.
+📱 Abra um novo terminal para configurar e rodar o aplicativo.
 
-Navegue até a pasta do aplicativo:
+Acesse a pasta do aplicativo (a partir da raiz do projeto):
 
 Bash
 cd app-mobile
@@ -119,18 +126,16 @@ Instale as dependências:
 Bash
 npm install
 Ajuste o IP da API:
-Para que o app no celular se conecte ao servidor, encontre o IP da sua máquina na rede local (ex: 192.168.0.102) e substitua localhost:3333 por SEU_IP:3333 nos arquivos onde a API é chamada.
+Para que o app no celular se conecte ao servidor, encontre o IP da sua máquina na rede local (ex: 192.168.0.102). Em seguida, nos arquivos do app, substitua a URL localhost:3333 por SEU_IP:3333.
 
 Inicie o Expo:
 
 Bash
 npx expo start
-✅ Sucesso! Escaneie o QR Code com o aplicativo Expo Go.
+✅ Sucesso! Escaneie o QR Code com o aplicativo Expo Go no seu celular.
 
-5. Documentação Adicional
-
-Categoria	Link
-Diagrama de Casos de Uso	./app-mobile/docs/casos-de-uso.png
-Diagrama de Classes	./app-mobile/docs/diagrama-de-classes.png
-Protótipo Navegável	Visualizar Protótipo no Figma
+## 4. 📚 Documentação Adicional
+* 🗂️ **Diagrama de Casos de Uso:*![Diagrama de Casos de Uso](./app-mobile/docs/casos-de-uso.png)
+* 🧩 **Diagrama de Classes:*![Diagrama de Classes](./app-mobile/docs/diagrama-de-classes.png)
+* 📱 **Protótipo Navegável:** *[➡️ Visualizar Protótipo no Figma](https://www.figma.com/design/a7OVs61HbxlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=GlEIy3610zuiOu88-1)*
 
