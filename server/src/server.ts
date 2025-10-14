@@ -1,19 +1,14 @@
-// Local: server/src/server.ts
-
 import express from 'express';
 import cors from 'cors';
 import { userRoutes } from './routes/userRoutes';
-import { moradiaRoutes } from './routes/moradiaRoutes'; // <-- ADICIONE ESTA LINHA
+import { moradiaRoutes } from './routes/moradiaRoutes';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-// Registra as rotas de Usuário
 app.use('/api/users', userRoutes);
-// Registra as rotas de Moradia
-app.use('/api/moradias', moradiaRoutes); // <-- ADICIONE ESTA LINHA
+app.use('/api/moradias', moradiaRoutes);
 
 const PORT = 3333;
 app.listen(PORT, () => {

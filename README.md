@@ -1,47 +1,119 @@
 # AvaliateStudents 🏡
 
-## 1. Descrição do Projeto
+![Status](https://img.shields.io/badge/status-entregue-green)
+![Tecnologia](https://img.shields.io/badge/tecnologia-full--stack-blue)
+![Plataforma](https://img.shields.io/badge/plataforma-mobile-lightgrey)
 
-AvaliateStudents é um aplicativo móvel, desenvolvido para a disciplina de Programação para Dispositivos Móveis, que visa criar uma plataforma para estudantes encontrarem, visualizarem e avaliarem moradias universitárias. O projeto facilita a busca por um novo lar, trazendo mais transparência e segurança para a comunidade estudantil.
+## 🎯 Sobre o Projeto
 
-## 2. Funcionalidades Planejadas (Entrega 2)
-
-O foco da segunda entrega é transformar o aplicativo estático em uma plataforma dinâmica, conectada a um back-end.
-
-- [x] **Autenticação de Usuários:**
-  - [ ] Cadastro de novos estudantes (usuários).
-  - [ ] Login com validação de e-mail e senha.
-  - [ ] Logout (sair da conta).
-- [x] **Gerenciamento de Moradias:**
-  - [ ] Listar todas as moradias cadastradas a partir da API.
-  - [ ] Visualizar detalhes de uma moradia específica.
-  - [ ] (NOVO) Cadastrar uma nova moradia.
-- [x] **Funcionalidades do Usuário:**
-  - [ ] (NOVO) Visualizar e editar o perfil do usuário.
-  - [ ] (NOVO) Avaliar uma moradia.
-  - [ ] (NOVO) Utilizar a câmera do celular para adicionar uma foto de perfil.
-
-## 3. Tecnologias Utilizadas
-
-- **App (Frontend):** React Native com Expo
-- **Linguagem:** TypeScript
-- **Navegação:** Expo Router
-- **Estilização:** StyleSheet nativo (Flexbox)
-- **Back-end:** (Definir - ex: Node.js com Express)
-- **Banco de Dados:** PostgreSQL
-- **Prototipação:** Figma
+O **AvaliateStudents** é um projeto acadêmico full-stack, desenvolvido para a disciplina de **Programação para Dispositivos Móveis**. A plataforma, composta por um aplicativo móvel e uma API, permite que estudantes encontrem, visualizem e avaliem moradias universitárias, trazendo mais transparência e segurança para a comunidade.
 
 ---
-## 4. Documentação de Apoio
 
-- **Diagrama de Casos de Uso (Atualizado):** `docs/casos-de-uso-v2.png`
-- **Diagrama de Classes:** `docs/diagrama-de-classes.png`
-- **Protótipo Navegável:** [➡️ Visualizar Protótipo no Figma](https://www.figma.com/design/a7OVs61HbxlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=GlEIy3610zuiOu88-1)
+### Tabela de Conteúdos
+1.  [Funcionalidades Implementadas](#1--funcionalidades-implementadas)
+2.  [Tecnologias Utilizadas](#2--tecnologias-utilizadas)
+3.  [Checklist de Requisitos (Entrega 02)](#3--checklist-de-requisitos-entrega-02)
+4.  [Guia de Instalação e Execução](#4--guia-de-instalação-e-execução)
+5.  [Documentação Adicional](#5--documentação-adicional)
 
 ---
-## 5. Endpoints da API (Exemplo)
 
-- `POST /usuarios`: Cria um novo usuário.
-- `POST /login`: Autentica um usuário.
-- `GET /moradias`: Retorna a lista de todas as moradias.
-- `GET /moradias/:id`: Retorna os detalhes de uma moradia específica.
+## 1. ✨ Funcionalidades Implementadas
+
+A fundação do sistema foi construída com as seguintes funcionalidades:
+
+-   ✅ **Autenticação de Usuários (Full-Stack):**
+    -   📱 **Cadastro e Login:** Interfaces no app para criar conta e entrar.
+    -   ⚙️ **API de Autenticação:** Endpoints `POST /api/users/register` e `POST /api/users/login` com validação e criptografia de senha (`bcrypt`).
+    -   🧠 **Gerenciamento de Sessão:** O estado do usuário é mantido globalmente no app com `AuthContext`, garantindo uma experiência de navegação fluida.
+
+-   ✅ **Gerenciamento de Moradias (Back-end):**
+    -   ⚙️ **API para Cadastrar Moradia (`POST /api/moradias`):** Lógica implementada para salvar novas moradias no banco de dados.
+    -   ⚙️ **API para Listar Moradias (`GET /api/moradias`):** Lógica implementada para buscar todas as moradias cadastradas.
+
+-   ✅ **Perfil do Usuário e Integração Nativa:**
+    -   📱 **Visualização de Perfil:** Exibe dinamicamente os dados do usuário que fez login.
+    -   📸 **Integração com Dispositivo:** Permite que o usuário troque sua foto de perfil acessando a **galeria de fotos** do celular (`expo-image-picker`).
+
+---
+
+## 2. 🛠️ Tecnologias Utilizadas
+
+| Categoria | Tecnologia |
+| :--- | :--- |
+| **Front-end (Mobile)** | `React Native`, `Expo`, `TypeScript`, `Expo Router` |
+| **Back-end (API)** | `Node.js`, `Express.js`, `TypeScript`, `Prisma (ORM)` |
+| **Banco de Dados** | `PostgreSQL` |
+
+---
+
+## 3. ✅ Checklist de Requisitos (Entrega 02)
+
+Este projeto cumpre todos os requisitos da Entrega 02 de Programação para Dispositivos Móveis:
+
+-   [x] **+4 Casos de Uso e Diagrama de Classes:** Lógica e `schema.prisma` implementados e diagramas criados.
+-   [x] **4 Endpoints no Back-end:** `register`, `login`, `list-moradias`, `create-moradia`.
+-   [x] **3 Tabelas no PostgreSQL:** `Usuario`, `Moradia` e `Avaliacao`.
+-   [x] **Integração App & Back-end:** Fluxo de autenticação 100% funcional.
+-   [x] **Funcionalidade do Dispositivo:** Acesso à galeria de fotos do celular.
+
+---
+
+## 4. 🚀 Guia de Instalação e Execução
+
+Siga este guia para rodar o projeto em uma nova máquina.
+
+### **Passo 1: Pré-requisitos**
+-   [Node.js](https://nodejs.org/) (v18+)
+-   [Git](https://git-scm.com/)
+-   [Docker](https://www.docker.com/products/docker-desktop/) (Recomendado para o banco de dados)
+
+### **Passo 2: Clonar o Repositório**
+```bash
+git clone [https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git](https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git)
+cd SEU-REPOSITORIO
+Passo 3: Configurar o Back-end (API)
+
+Navegue até a pasta do servidor: cd server
+
+Instale as dependências: npm install
+
+Inicie o Banco de Dados (Docker): O comando abaixo cria e roda um container PostgreSQL pronto para uso.
+
+Bash
+docker run --name pg-avaliate -e POSTGRES_USER=docker -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=avaliatestudents -p 5432:5432 -d postgres
+Configure as Variáveis de Ambiente: Crie um arquivo .env na pasta server com a seguinte linha:
+
+DATABASE_URL="postgresql://docker:docker@localhost:5432/avaliatestudents"
+Crie as Tabelas no Banco: Este comando usa o Prisma para criar a estrutura do banco.
+
+Bash
+npx prisma db push
+Inicie o servidor:
+
+Bash
+npm run dev
+✅ Sucesso! O servidor estará rodando em http://localhost:3333.
+
+Passo 4: Configurar o Front-end (App)
+
+Abra um novo terminal.
+
+Navegue até a pasta do aplicativo: cd app-mobile
+
+Instale as dependências: npm install
+
+Ajuste o IP da API: Para que o app no celular se conecte ao servidor, encontre o IP da sua máquina na rede local (ex: 192.168.0.102) e substitua localhost:3333 por SEU_IP:3333 nos arquivos onde a API é chamada.
+
+Inicie o Expo:
+
+Bash
+npx expo start
+✅ Sucesso! Escaneie o QR Code com o aplicativo Expo Go.
+
+5. 📚 Documentação Adicional
+* 🗂️ **Diagrama de Casos de Uso:*![Diagrama de Casos de Uso](./app-mobile/docs/casos-de-uso.png)
+* 🧩 **Diagrama de Classes:*![Diagrama de Classes](./app-mobile/docs/diagrama-de-classes.png)
+* 📱 **Protótipo Navegável:** *[➡️ Visualizar Protótipo no Figma](https://www.figma.com/design/a7OVs61HbxlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=GlEIy3610zuiOu88-1)*
+
