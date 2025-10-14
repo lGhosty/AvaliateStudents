@@ -60,33 +60,43 @@ Este projeto cumpre todos os requisitos da Entrega 02 de Programação para Disp
 
 ---
 
-## 4. 🚀 Guia de Instalação e Execução
-
+🚀 Guia de Instalação e Execução
 Siga este guia para rodar o projeto em uma nova máquina.
 
-### **Passo 1: Pré-requisitos**
--   [Node.js](https://nodejs.org/) (v18+)
--   [Git](https://git-scm.com/)
--   [Docker](https://www.docker.com/products/docker-desktop/) (Recomendado para o banco de dados)
+Passo 1: Pré-requisitos
 
-### **Passo 2: Clonar o Repositório**
-```bash
-git clone [https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git](https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git)
+Node.js (v18+)
+
+Git
+
+Docker (Recomendado para o banco de dados)
+
+Passo 2: Clonar o Repositório
+
+Bash
+git clone https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git
 cd SEU-REPOSITORIO
 Passo 3: Configurar o Back-end (API)
 
-Navegue até a pasta do servidor: cd server
+Navegue até a pasta do servidor:
 
-Instale as dependências: npm install
+Bash
+cd server
+Instale as dependências:
 
-Inicie o Banco de Dados (Docker): O comando abaixo cria e roda um container PostgreSQL pronto para uso.
+Bash
+npm install
+Inicie o Banco de Dados com Docker:
+O comando abaixo cria e roda um container PostgreSQL pronto para uso.
 
 Bash
 docker run --name pg-avaliate -e POSTGRES_USER=docker -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=avaliatestudents -p 5432:5432 -d postgres
-Configure as Variáveis de Ambiente: Crie um arquivo .env na pasta server com a seguinte linha:
+Configure as Variáveis de Ambiente:
+Crie um arquivo .env na pasta server com a seguinte linha:
 
 DATABASE_URL="postgresql://docker:docker@localhost:5432/avaliatestudents"
-Crie as Tabelas no Banco: Este comando usa o Prisma para criar a estrutura do banco.
+Crie as Tabelas no Banco:
+Este comando usa o Prisma para criar a estrutura do banco.
 
 Bash
 npx prisma db push
@@ -96,15 +106,20 @@ Bash
 npm run dev
 ✅ Sucesso! O servidor estará rodando em http://localhost:3333.
 
-### **Passo 4: Configurar o Front-end (App)
+Passo 4: Configurar o Front-end (App)
 
 Abra um novo terminal.
 
-Navegue até a pasta do aplicativo: cd app-mobile
+Navegue até a pasta do aplicativo:
 
-Instale as dependências: npm install
+Bash
+cd app-mobile
+Instale as dependências:
 
-Ajuste o IP da API: Para que o app no celular se conecte ao servidor, encontre o IP da sua máquina na rede local (ex: 192.168.0.102) e substitua localhost:3333 por SEU_IP:3333 nos arquivos onde a API é chamada.
+Bash
+npm install
+Ajuste o IP da API:
+Para que o app no celular se conecte ao servidor, encontre o IP da sua máquina na rede local (ex: 192.168.0.102) e substitua localhost:3333 por SEU_IP:3333 nos arquivos onde a API é chamada.
 
 Inicie o Expo:
 
@@ -112,11 +127,10 @@ Bash
 npx expo start
 ✅ Sucesso! Escaneie o QR Code com o aplicativo Expo Go.
 
-### 5. Documentação Adicional
+5. Documentação Adicional
 
-| Categoria | Link |
-| :--- | :--- |
-| **Diagrama de Casos de Uso** | [./app-mobile/docs/casos-de-uso.png](./app-mobile/docs/casos-de-uso.png) |
-| **Diagrama de Classes** | [./app-mobile/docs/diagrama-de-classes.png](./app-mobile/docs/diagrama-de-classes.png) |
-| **Protótipo Navegável** | [Visualizar Protótipo no Figma](https://www.figma.com/design/a70Vs61HbXlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=G1Eiy3610zUi0U8B-1) |
+Categoria	Link
+Diagrama de Casos de Uso	./app-mobile/docs/casos-de-uso.png
+Diagrama de Classes	./app-mobile/docs/diagrama-de-classes.png
+Protótipo Navegável	Visualizar Protótipo no Figma
 
