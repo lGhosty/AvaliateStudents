@@ -96,7 +96,7 @@ Bash
 npm run dev
 ✅ Sucesso! O servidor estará rodando em http://localhost:3333.
 
-Passo 4: Configurar o Front-end (App)
+### **Passo 4: Configurar o Front-end (App)
 
 Abra um novo terminal.
 
@@ -112,7 +112,7 @@ Bash
 npx expo start
 ✅ Sucesso! Escaneie o QR Code com o aplicativo Expo Go.
 
-5. 📚 Documentação Adicional
+## 4. 📚 Documentação Adicional
 * 🗂️ **Diagrama de Casos de Uso:*![Diagrama de Casos de Uso](./app-mobile/docs/casos-de-uso.png)
 * 🧩 **Diagrama de Classes:*![Diagrama de Classes](./app-mobile/docs/diagrama-de-classes.png)
 * 📱 **Protótipo Navegável:** *[➡️ Visualizar Protótipo no Figma](https://www.figma.com/design/a7OVs61HbxlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=GlEIy3610zuiOu88-1)*
