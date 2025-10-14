@@ -112,8 +112,11 @@ Bash
 npx expo start
 ✅ Sucesso! Escaneie o QR Code com o aplicativo Expo Go.
 
-## 4. 📚 Documentação Adicional
-* 🗂️ **Diagrama de Casos de Uso:*![Diagrama de Casos de Uso](./app-mobile/docs/casos-de-uso.png)
-* 🧩 **Diagrama de Classes:*![Diagrama de Classes](./app-mobile/docs/diagrama-de-classes.png)
-* 📱 **Protótipo Navegável:** *[➡️ Visualizar Protótipo no Figma](https://www.figma.com/design/a7OVs61HbxlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=GlEIy3610zuiOu88-1)*
+### 5. Documentação Adicional
+
+| Categoria | Link |
+| :--- | :--- |
+| **Diagrama de Casos de Uso** | [./app-mobile/docs/casos-de-uso.png](./app-mobile/docs/casos-de-uso.png) |
+| **Diagrama de Classes** | [./app-mobile/docs/diagrama-de-classes.png](./app-mobile/docs/diagrama-de-classes.png) |
+| **Protótipo Navegável** | [Visualizar Protótipo no Figma](https://www.figma.com/design/a70Vs61HbXlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=G1Eiy3610zUi0U8B-1) |
 
