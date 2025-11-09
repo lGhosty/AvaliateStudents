@@ -1,5 +1,3 @@
-// Conteúdo do arquivo: server/prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,33 +8,81 @@ datasource db {
 }
 
 model Usuario {
-  id         Int         @id @default(autoincrement())
-  nome       String
-  email      String      @unique
-  senha      String
-  avatarUrl  String?
+  id        Int       @id @default(autoincrement())
+  nome      String
+  email     String    @unique
+  senha     String
+  avatarUrl String?
+  role      String    @default("ESTUDANTE")
+
   moradias   Moradia[]
   avaliacoes Avaliacao[]
+  reservas   Reserva[]
+  mensagens  Mensagem[]
 }
 
 model Moradia {
-  id         Int         @id @default(autoincrement())
-  nome       String
-  endereco   String
-  descricao  String
-  preco      Float
-  imageUrl   String?
-  criador    Usuario     @relation(fields: [criadorId], references: [id])
-  criadorId  Int
+  id        Int       @id @default(autoincrement())
+  nome      String
+  endereco  String
+  descricao String
+  preco     Float
+  imageUrl  String?
+  latitude  Float?
+  longitude Float?
+
+  criador   Usuario @relation(fields: [criadorId], references: [id])
+  criadorId Int
+
   avaliacoes Avaliacao[]
+  reservas   Reserva[]
 }
 
 model Avaliacao {
-  id        Int       @id @default(autoincrement())
-  nota      Float
+  id        Int      @id @default(autoincrement())
+  nota      Float    // O seu schema original tinha Float
   comentario String?
-  autor     Usuario   @relation(fields: [autorId], references: [id])
+  
+  autor     Usuario  @relation(fields: [autorId], references: [id])
   autorId   Int
-  moradia   Moradia   @relation(fields: [moradiaId], references: [id])
+  moradia   Moradia  @relation(fields: [moradiaId], references: [id])
   moradiaId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+
+  @@unique([moradiaId, autorId]) // Um utilizador só pode avaliar uma moradia uma vez
+}
+
+// 2. Tabela de Reservas
+model Reserva {
+  id        Int       @id @default(autoincrement())
+  dataEntrada DateTime
+  dataSaida   DateTime
+  status    String    @default("PENDENTE") // PENDENTE, CONFIRMADA, CANCELADA
+
+  moradia   Moradia   @relation(fields: [moradiaId], references: [id], onDelete: Cascade)
+  moradiaId Int
+
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  usuarioId Int
+
+  mensagens Mensagem[] // Uma reserva pode ter várias mensagens
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// 3. Tabela de Mensagens
+model Mensagem {
+  id      Int      @id @default(autoincrement())
+  texto   String   @db.Text
+
+  autor     Usuario  @relation(fields: [autorId], references: [id], onDelete: Cascade)
+  autorId   Int
+
+  reserva   Reserva  @relation(fields: [reservaId], references: [id], onDelete: Cascade)
+  reservaId Int
+
+  createdAt DateTime @default(now())
 }
