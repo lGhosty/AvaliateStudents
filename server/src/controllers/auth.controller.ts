@@ -1,45 +1,27 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import { AuthService } from '../services/auth.service';
 
-const prisma = new PrismaClient();
+const authService = new AuthService();
 
-export class UserController {
-  async create(req: Request, res: Response) {
-    const { nome, email, senha } = req.body;
-    const senhaHash = await bcrypt.hash(senha, 8);
-
+export class AuthController {
+  
+  // O controlador agora apenas lida com 'req' e 'res'
+  async register(req: Request, res: Response) {
     try {
-      const usuario = await prisma.usuario.create({
-        data: {
-          nome,
-          email,
-          senha: senhaHash,
-        },
-      });
-      const { senha: _, ...usuarioSemSenha } = usuario;
-      return res.status(201).json(usuarioSemSenha);
-
+      const usuario = await authService.register(req.body);
+      return res.status(201).json(usuario);
     } catch (error) {
-      return res.status(400).json({ message: 'E-mail já cadastrado.' });
+      return res.status(400).json({ message: (error as Error).message });
     }
   }
 
   async login(req: Request, res: Response) {
-    const { email, senha } = req.body;
-
-    const usuario = await prisma.usuario.findUnique({ where: { email } });
-
-    if (!usuario) {
-      return res.status(401).json({ message: 'Credenciais inválidas.' });
+    try {
+      const { email, senha } = req.body;
+      const result = await authService.login(email, senha);
+      return res.json(result);
+    } catch (error) {
+      return res.status(401).json({ message: (error as Error).message });
     }
-
-    const senhaValida = await bcrypt.compare(senha, usuario.senha);
-    if (!senhaValida) {
-      return res.status(401).json({ message: 'Credenciais inválidas.' });
-    }
-
-    const { senha: _, ...usuarioSemSenha } = usuario;
-    return res.json(usuarioSemSenha);
   }
 }

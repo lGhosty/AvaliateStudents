@@ -1,40 +1,29 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { MoradiaService } from '../services/moradia.service';
+import { AuthRequest } from '../middleware/auth.middleware';
 
-const prisma = new PrismaClient();
+const moradiaService = new MoradiaService();
 
 export class MoradiaController {
+
   async list(req: Request, res: Response) {
     try {
-      const moradias = await prisma.moradia.findMany();
+      const moradias = await moradiaService.list();
       return res.json(moradias);
     } catch (error) {
-      return res.status(500).json({ message: 'Erro ao buscar moradias.' });
+      return res.status(500).json({ message: (error as Error).message });
     }
   }
 
-  
-  async create(req: Request, res: Response) {
-    const criadorId = 1;
-    const { nome, endereco, descricao, preco } = req.body;
-
-    if (!nome || !endereco || !descricao || !preco) {
-        return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
-    }
-
+  async create(req: AuthRequest, res: Response) {
     try {
-      const moradia = await prisma.moradia.create({
-        data: {
-          nome,
-          endereco,
-          descricao,
-          preco,
-          criadorId,
-        },
-      });
+      // Obtém o ID do utilizador a partir do token (é um número)
+      const criadorId = req.user!.id;
+      
+      const moradia = await moradiaService.create(req.body, criadorId);
       return res.status(201).json(moradia);
     } catch (error) {
-      return res.status(400).json({ message: 'Erro ao cadastrar moradia. Verifique os dados.' });
+      return res.status(400).json({ message: (error as Error).message });
     }
   }
 }
