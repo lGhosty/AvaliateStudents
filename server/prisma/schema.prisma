@@ -15,10 +15,13 @@ model Usuario {
   avatarUrl String?
   role      String    @default("ESTUDANTE")
 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
   moradias   Moradia[]
   avaliacoes Avaliacao[]
-  reservas   Reserva[]
-  mensagens  Mensagem[]
+  reservas   Reserva[]   // <-- NOVA RELAÇÃO
+  mensagens  Mensagem[]  // <-- NOVA RELAÇÃO
 }
 
 model Moradia {
@@ -29,13 +32,16 @@ model Moradia {
   preco     Float
   imageUrl  String?
   latitude  Float?
-  longitude Float?
+  longitude Float? 
 
   criador   Usuario @relation(fields: [criadorId], references: [id])
   criadorId Int
 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
   avaliacoes Avaliacao[]
-  reservas   Reserva[]
+  reservas   Reserva[] // <-- NOVA RELAÇÃO
 }
 
 model Avaliacao {
@@ -43,18 +49,17 @@ model Avaliacao {
   nota      Float    // O seu schema original tinha Float
   comentario String?
   
-  autor     Usuario  @relation(fields: [autorId], references: [id])
+  autor     Usuario  @relation(fields: [autorId], references: [id], onDelete: Cascade)
   autorId   Int
-  moradia   Moradia  @relation(fields: [moradiaId], references: [id])
+  moradia   Moradia  @relation(fields: [moradiaId], references: [id], onDelete: Cascade)
   moradiaId Int
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
 
   @@unique([moradiaId, autorId]) // Um utilizador só pode avaliar uma moradia uma vez
 }
 
-// 2. Tabela de Reservas
 model Reserva {
   id        Int       @id @default(autoincrement())
   dataEntrada DateTime
@@ -73,7 +78,6 @@ model Reserva {
   updatedAt DateTime  @updatedAt
 }
 
-// 3. Tabela de Mensagens
 model Mensagem {
   id      Int      @id @default(autoincrement())
   texto   String   @db.Text

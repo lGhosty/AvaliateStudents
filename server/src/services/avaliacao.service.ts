@@ -3,11 +3,13 @@ import { Avaliacao } from '@prisma/client';
 
 export class AvaliacaoService {
   
-  async create(data: { nota: number; comentario?: string }, autorId: number, moradiaId: number): Promise<Avaliacao> {
+  async create(data: { nota: any; comentario?: string }, autorId: number, moradiaId: number): Promise<Avaliacao> {
     const { nota, comentario } = data;
 
-    if (nota < 1 || nota > 5) {
-      throw new Error('A nota deve ser entre 1 e 5.');
+    // Converte a nota para Float e valida
+    const notaFloat = parseFloat(String(nota));
+    if (isNaN(notaFloat) || notaFloat < 1 || notaFloat > 5) {
+      throw new Error('A nota deve ser um número entre 1 e 5.');
     }
     
     const moradia = await prisma.moradia.findUnique({ where: { id: moradiaId } });
@@ -24,7 +26,7 @@ export class AvaliacaoService {
 
     const avaliacao = await prisma.avaliacao.create({
       data: {
-        nota,
+        nota: notaFloat,
         comentario,
         moradiaId,
         autorId,
