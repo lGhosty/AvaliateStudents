@@ -7,6 +7,7 @@ const moradiaController = new MoradiaController();
 
 // A rota de 'list' (GET) é pública
 router.get('/', moradiaController.list);
+// Rota para obter uma moradia por ID (pública)
 router.get('/:id', moradiaController.getById);
 // A rota de 'create' (POST) agora é protegida
 router.post('/', authMiddleware, moradiaController.create);

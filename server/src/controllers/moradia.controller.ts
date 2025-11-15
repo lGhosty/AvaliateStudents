@@ -5,6 +5,14 @@ import { AuthRequest } from '../middleware/auth.middleware';
 const moradiaService = new MoradiaService();
 
 export class MoradiaController {
+  async list(req: Request, res: Response) {
+    try {
+      const moradias = await moradiaService.list();
+      return res.json(moradias);
+    } catch (error) {
+      return res.status(500).json({ message: (error as Error).message });
+    }
+  }
   async create(req: AuthRequest, res: Response) {
     try {
       const criadorId = req.user!.id;
@@ -14,7 +22,6 @@ export class MoradiaController {
       return res.status(400).json({ message: (error as Error).message });
     }
   }
-    
   async getById(req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id);

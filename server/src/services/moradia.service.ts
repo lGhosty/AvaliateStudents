@@ -2,6 +2,20 @@ import { prisma } from '../lib/prisma';
 import { Moradia } from '@prisma/client';
 
 export class MoradiaService {
+  async list(): Promise<Moradia[]> {
+    const moradias = await prisma.moradia.findMany({
+      include: {
+        avaliacoes: { // Inclui as avaliações
+          select: { nota: true }
+        },
+        criador: { // Inclui o nome do criador
+          select: { nome: true }
+        }
+      }
+    });
+    return moradias;
+  }
+  
   async create(data: any, criadorId: number): Promise<Moradia> {
     const { nome, endereco, descricao, preco, latitude, longitude } = data;
 
