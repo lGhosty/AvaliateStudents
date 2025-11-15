@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuth } from '../../context/AuthContext'; 
+import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'expo-router';
+import { BASE_URL } from '../../constants/api';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Loading para o botão
   const { login } = useAuth();
   const router = useRouter();
 
@@ -15,9 +17,10 @@ export default function LoginScreen() {
       Alert.alert("Erro", "Por favor, preencha e-mail e senha.");
       return;
     }
+    setIsLoading(true); // Ativa o loading
     
     try {
-      const response = await fetch(`http://192.168.0.102:3333/api/users/login`, {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,12 +31,15 @@ export default function LoginScreen() {
       const data = await response.json();
 
       if (response.ok) {
-        login(data);
+        await login(data.user, data.token);
       } else {
         Alert.alert('Erro no Login', data.message || 'Credenciais inválidas.');
       }
     } catch (error) {
+      console.error(error);
       Alert.alert('Erro de Conexão', 'Não foi possível conectar ao servidor.');
+    } finally {
+      setIsLoading(false); // Desativa o loading
     }
   };
 
@@ -55,8 +61,12 @@ export default function LoginScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Entrar</Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
+        {isLoading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.buttonText}>Entrar</Text>
+        )}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
         <Text style={styles.link}>Não tem uma conta? Cadastre-se</Text>
@@ -65,12 +75,12 @@ export default function LoginScreen() {
   );
 }
 
-
 const styles = StyleSheet.create({
     container: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#f5f5f5' },
     title: { fontSize: 32, fontWeight: 'bold', textAlign: 'center', marginBottom: 40, color: '#333' },
     input: { height: 50, backgroundColor: '#fff', borderColor: '#ddd', borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, marginBottom: 15, fontSize: 16 },
-    button: { backgroundColor: '#007bff', padding: 15, borderRadius: 8, alignItems: 'center' },
-    buttonText: { color: 'white', fontSize: 18, fontWeight: 'bold' },
-    link: { marginTop: 20, textAlign: 'center', color: '#007bff', fontSize: 16 },
+    button: { backgroundColor: '#007bff', padding: 15, borderRadius: 8, alignItems: 'center', minHeight: 50, justifyContent: 'center' },
+    buttonText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+    link: { color: '#007bff', textAlign: 'center', marginTop: 20, fontSize: 16 }
 });
+
