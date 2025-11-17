@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams, useRouter, Stack } from 'expo-router'; // Importar Stack
+import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { BASE_URL } from '../constants/api';
 import { useAuth } from '../context/AuthContext';
 import { ModalAvaliacao } from './components/ModalAvaliacao';
+
+// URL de imagem segura para usar caso a moradia não tenha foto
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
 
 interface MoradiaDetalhada {
   id: number;
@@ -14,13 +17,16 @@ interface MoradiaDetalhada {
   descricao: string;
   preco: number;
   imageUrl: string | null;
-  criador: { nome: string; };
+  criador: {
+    id: number;
+    nome: string;
+  };
   avaliacoes: { id: number; nota: number; comentario: string | null; autor: { nome: string; }; }[];
 }
 
 export default function DetailsScreen() {
   const router = useRouter();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const { id } = useLocalSearchParams<{ id: string }>();
   
   const [moradia, setMoradia] = useState<MoradiaDetalhada | null>(null);
@@ -48,6 +54,39 @@ export default function DetailsScreen() {
     fetchMoradiaDetalhes();
   }, [fetchMoradiaDetalhes]);
 
+  // --- Lógica de EXCLUIR ---
+  const handleDelete = async () => {
+    Alert.alert(
+      "Excluir Moradia",
+      "Tem certeza? Esta ação não pode ser desfeita.",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const response = await fetch(`${BASE_URL}/moradias/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+              });
+              if (response.ok) {
+                Alert.alert("Sucesso", "Moradia excluída.");
+                router.replace('/(tabs)/home');
+              } else {
+                const data = await response.json();
+                Alert.alert("Erro", data.message || "Não foi possível excluir.");
+              }
+            } catch (e) {
+              Alert.alert("Erro", "Falha na conexão.");
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  // --- Lógica de RESERVAR ---
   const handleReserva = async () => {
     if (!token) {
       Alert.alert('Login necessário', 'Você precisa estar logado para reservar.');
@@ -96,14 +135,15 @@ export default function DetailsScreen() {
       </SafeAreaView>
     );
   }
-    
-  const imagemFinal = moradia.imageUrl
-    ? moradia.imageUrl
-    : 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80';
+
+  // Imagem de fallback se não houver foto
+  const imagemFinal = moradia.imageUrl ? moradia.imageUrl : FALLBACK_IMAGE;
+
+  // Verifica se o utilizador logado é o dono da moradia
+  const isDono = user && moradia.criador && user.id === moradia.criador.id;
 
   return (
     <View style={styles.container}>
-      {/* Configuração para esconder o header nativo do sistema, pois vamos fazer o nosso */}
       <Stack.Screen options={{ headerShown: false }} />
 
       <ScrollView>
@@ -114,10 +154,20 @@ export default function DetailsScreen() {
             resizeMode="cover"
           />
           
-          {/* --- BOTÃO DE VOLTAR MANUAL (Seta sobre a imagem) --- */}
+          {/* Botão Voltar (Seta Esquerda) */}
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color="#fff" />
           </TouchableOpacity>
+
+          {/* Botão Excluir (Lixeira Direita) - Só aparece se for o dono */}
+          {isDono && (
+             <TouchableOpacity
+               style={[styles.backButton, { left: undefined, right: 20, backgroundColor: '#dc3545' }]}
+               onPress={handleDelete}
+             >
+               <Ionicons name="trash" size={24} color="#fff" />
+             </TouchableOpacity>
+          )}
         </View>
 
         <View style={styles.content}>
@@ -167,7 +217,7 @@ export default function DetailsScreen() {
                 <View style={styles.reviewHeader}>
                   <Text style={styles.reviewAuthor}>{ava.autor.nome}</Text>
                   <View style={{flexDirection:'row'}}>
-                     <Text style={{fontWeight:'bold', color:'#FFD700'}}>{ava.nota} </Text>
+                     <Text style={{fontWeight:'bold', color:'#FFD700', marginRight: 4}}>{ava.nota}</Text>
                      <Ionicons name="star" size={14} color="#FFD700" />
                   </View>
                 </View>
@@ -194,19 +244,20 @@ export default function DetailsScreen() {
 const styles = StyleSheet.create({
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   container: { flex: 1, backgroundColor: '#fff' },
+  
   imageContainer: { position: 'relative' },
   image: { width: '100%', height: 300 },
   backButton: {
     position: 'absolute',
-    top: 40, // Ajuste para ficar abaixo da barra de status
+    top: 40,
     left: 20,
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(0,0,0,0.5)', // Fundo escuro transparente
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 10, // Garante que fica por cima da imagem
+    zIndex: 10,
   },
 
   content: { padding: 20, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: -20, backgroundColor: '#fff' },

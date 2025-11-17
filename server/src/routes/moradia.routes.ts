@@ -5,11 +5,13 @@ import { authMiddleware } from '../middleware/auth.middleware';
 const router = Router();
 const moradiaController = new MoradiaController();
 
-// A rota de 'list' (GET) é pública
+// Públicas
 router.get('/', moradiaController.list);
-// Rota para obter uma moradia por ID (pública)
 router.get('/:id', moradiaController.getById);
-// A rota de 'create' (POST) agora é protegida
+
+// Protegidas (Precisa de Token)
 router.post('/', authMiddleware, moradiaController.create);
+router.delete('/:id', authMiddleware, moradiaController.delete); // <-- NOVA
+router.put('/:id', authMiddleware, moradiaController.update);    // <-- NOVA
 
 export { router as moradiaRoutes };
