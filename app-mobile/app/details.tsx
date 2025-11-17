@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BASE_URL } from '../constants/api'; // O nosso IP centralizado
-import { useAuth } from '../context/AuthContext'; // Para o botão de reservar/avaliar
+import { BASE_URL } from '../constants/api';
+import { useAuth } from '../context/AuthContext';
+import { ModalAvaliacao } from '../components/ModalAvaliacao';
 
-// Interface para os dados completos da moradia (do back-end)
 interface MoradiaDetalhada {
   id: number;
   nome: string;
@@ -13,62 +13,91 @@ interface MoradiaDetalhada {
   descricao: string;
   preco: number;
   imageUrl: string | null;
-  criador: {
-    nome: string;
-  };
-  avaliacoes: {
-    id: number;
-    nota: number;
-    comentario: string | null;
-    autor: {
-      nome: string;
-    };
-  }[];
+  criador: { nome: string; };
+  avaliacoes: { id: number; nota: number; comentario: string | null; autor: { nome: string; }; }[];
 }
 
 export default function DetailsScreen() {
+  // 1. PRIMEIRO: Declarar todos os Hooks e Variáveis
   const router = useRouter();
-  const { token } = useAuth(); // Apanha o token para sabermos se podemos reservar/avaliar
-  const { id } = useLocalSearchParams<{ id: string }>(); // 1. Apanha o ID da moradia (da URL)
+  const { token } = useAuth();
+  const { id } = useLocalSearchParams<{ id: string }>();
   
   const [moradia, setMoradia] = useState<MoradiaDetalhada | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalAvaliacaoVisivel, setIsModalAvaliacaoVisivel] = useState(false);
 
-  // 2. useEffect para buscar os dados da moradia específica
+  // 2. SEGUNDO: Funções auxiliares (Fetch, Reserva, Nota)
+  const fetchMoradiaDetalhes = useCallback(async () => {
+    if (!id) return;
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${BASE_URL}/moradias/${id}`);
+      if (!response.ok) throw new Error('Moradia não encontrada');
+      const data = await response.json();
+      setMoradia(data);
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Erro', 'Não foi possível carregar os detalhes.');
+      router.back();
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id]);
+
   useEffect(() => {
-    if (!id) return; // Se não houver ID, não faz nada
+    fetchMoradiaDetalhes();
+  }, [fetchMoradiaDetalhes]);
 
-    async function fetchMoradiaDetalhes() {
-      setIsLoading(true); // Garante que o loading aparece em cada nova moradia
-      try {
-        // 3. Chama a nova rota do back-end (GET /api/moradias/:id)
-        const response = await fetch(`${BASE_URL}/moradias/${id}`);
-        
-        if (!response.ok) {
-          throw new Error('Moradia não encontrada');
-        }
-        const data = await response.json();
-        setMoradia(data);
-      } catch (error) {
-        console.error(error);
-        Alert.alert('Erro', 'Não foi possível carregar os detalhes da moradia.');
-        router.back();
-      } finally {
-        setIsLoading(false);
-      }
+  // A função de RESERVA (agora as variáveis 'token' e 'router' já existem!)
+  const handleReserva = async () => {
+    if (!token) {
+      Alert.alert('Login necessário', 'Você precisa estar logado para reservar.');
+      return;
     }
 
-    fetchMoradiaDetalhes();
-  }, [id]); // Re-executa se o ID mudar
+    setIsLoading(true);
+    try {
+      // Define datas automáticas para teste (Amanhã até daqui a 7 dias)
+      const hoje = new Date();
+      const amanha = new Date(hoje); amanha.setDate(hoje.getDate() + 1);
+      const fim = new Date(hoje); fim.setDate(hoje.getDate() + 8);
 
-  // Função para calcular a nota média
+      const response = await fetch(`${BASE_URL}/reservas/moradia/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          dataEntrada: amanha.toISOString(),
+          dataSaida: fim.toISOString()
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Sucesso!', 'Reserva realizada com sucesso.');
+        // Redireciona para a página de "Minhas Reservas" (que vamos criar a seguir)
+        router.push('/minhas-reservas');
+      } else {
+        throw new Error(data.message || 'Erro ao reservar.');
+      }
+    } catch (error) {
+      Alert.alert('Erro', (error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const getNotaMedia = (avaliacoes: MoradiaDetalhada['avaliacoes']) => {
     if (!avaliacoes || avaliacoes.length === 0) return 'N/A';
     const total = avaliacoes.reduce((acc, ava) => acc + ava.nota, 0);
     return (total / avaliacoes.length).toFixed(1);
   };
 
-  // Se estiver a carregar, mostra o spinner
+  // 3. TERCEIRO: Renderização (JSX)
   if (isLoading || !moradia) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
@@ -77,7 +106,6 @@ export default function DetailsScreen() {
     );
   }
 
-  // 4. Se carregou, mostra os dados reais
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -97,17 +125,23 @@ export default function DetailsScreen() {
           <Text style={styles.description}>{moradia.descricao}</Text>
           <Text style={styles.anunciante}>Anunciado por: {moradia.criador.nome}</Text>
 
-          {/* Botões para os NOVOS CASOS DE USO */}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.buttonPrimary} onPress={() => {/* TODO: Lógica de Reserva */}}>
+            <TouchableOpacity
+              style={styles.buttonPrimary}
+              onPress={handleReserva} // Chama a função corrigida
+            >
               <Text style={styles.buttonText}>Reservar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonSecondary} onPress={() => {/* TODO: Lógica de Avaliar */}}>
+            
+            <TouchableOpacity
+              style={styles.buttonSecondary}
+              onPress={() => setIsModalAvaliacaoVisivel(true)}
+              disabled={!token}
+            >
               <Text style={styles.buttonTextSecondary}>Avaliar</Text>
             </TouchableOpacity>
           </View>
 
-          {/* 5. Lista as avaliações (Novo Caso de Uso) */}
           <Text style={styles.sectionTitle}>Avaliações</Text>
           {moradia.avaliacoes.length === 0 ? (
             <Text style={styles.noReviews}>Esta moradia ainda não tem avaliações.</Text>
@@ -121,6 +155,16 @@ export default function DetailsScreen() {
           )}
         </View>
       </ScrollView>
+      
+      <ModalAvaliacao
+        isVisible={isModalAvaliacaoVisivel}
+        onClose={() => setIsModalAvaliacaoVisivel(false)}
+        moradiaId={moradia.id}
+        onSubmitSuccess={() => {
+          setIsModalAvaliacaoVisivel(false);
+          fetchMoradiaDetalhes();
+        }}
+      />
     </SafeAreaView>
   );
 }
