@@ -3,7 +3,9 @@ import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator, Alert, To
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BASE_URL } from '../constants/api'; // O nosso IP centralizado
-import { useAuth } from '../context/AuthContext'; // Para o botão de reservar
+import { useAuth } from '../context/AuthContext'; // Para o botão de reservar/avaliar
+
+// Interface para os dados completos da moradia (do back-end)
 interface MoradiaDetalhada {
   id: number;
   nome: string;
@@ -26,15 +28,20 @@ interface MoradiaDetalhada {
 
 export default function DetailsScreen() {
   const router = useRouter();
-  const { token } = useAuth();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { token } = useAuth(); // Apanha o token para sabermos se podemos reservar/avaliar
+  const { id } = useLocalSearchParams<{ id: string }>(); // 1. Apanha o ID da moradia (da URL)
+  
   const [moradia, setMoradia] = useState<MoradiaDetalhada | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // 2. useEffect para buscar os dados da moradia específica
   useEffect(() => {
     if (!id) return; // Se não houver ID, não faz nada
 
     async function fetchMoradiaDetalhes() {
+      setIsLoading(true); // Garante que o loading aparece em cada nova moradia
       try {
+        // 3. Chama a nova rota do back-end (GET /api/moradias/:id)
         const response = await fetch(`${BASE_URL}/moradias/${id}`);
         
         if (!response.ok) {
@@ -52,9 +59,11 @@ export default function DetailsScreen() {
     }
 
     fetchMoradiaDetalhes();
-  }, [id]);
+  }, [id]); // Re-executa se o ID mudar
+
+  // Função para calcular a nota média
   const getNotaMedia = (avaliacoes: MoradiaDetalhada['avaliacoes']) => {
-    if (!avaliacoes || avaliacacoes.length === 0) return 'N/A';
+    if (!avaliacoes || avaliacoes.length === 0) return 'N/A';
     const total = avaliacoes.reduce((acc, ava) => acc + ava.nota, 0);
     return (total / avaliacoes.length).toFixed(1);
   };
@@ -87,6 +96,8 @@ export default function DetailsScreen() {
           <Text style={styles.sectionTitle}>Descrição</Text>
           <Text style={styles.description}>{moradia.descricao}</Text>
           <Text style={styles.anunciante}>Anunciado por: {moradia.criador.nome}</Text>
+
+          {/* Botões para os NOVOS CASOS DE USO */}
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.buttonPrimary} onPress={() => {/* TODO: Lógica de Reserva */}}>
               <Text style={styles.buttonText}>Reservar</Text>
