@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, View, TextInput, TouchableOpacity, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAuth } from '../../context/AuthContext'; // <-- Para apanhar o token
+import { useAuth } from '../../context/AuthContext';
 import { BASE_URL } from '../../constants/api';
 import { useRouter } from 'expo-router';
+import * as Location from 'expo-location';
 
 export default function AddMoradiaScreen() {
   const { token } = useAuth();
@@ -17,6 +18,26 @@ export default function AddMoradiaScreen() {
   const [longitude, setLongitude] = useState('');
   
   const [isLoading, setIsLoading] = useState(false);
+  const handleGetLocation = async () => {
+    setIsLoading(true);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permissão negada', 'Precisamos de acesso à localização para preencher automaticamente.');
+        setIsLoading(false);
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      setLatitude(location.coords.latitude.toString());
+      setLongitude(location.coords.longitude.toString());
+      Alert.alert('Sucesso', 'Localização obtida!');
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível obter a localização.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleAddMoradia = async () => {
     if (!nome || !endereco || !descricao || !preco) {
@@ -26,7 +47,6 @@ export default function AddMoradiaScreen() {
     setIsLoading(true);
 
     try {
-      // 2. Fazer a chamada FETCH para a rota protegida
       const response = await fetch(`${BASE_URL}/moradias`, {
         method: 'POST',
         headers: {
@@ -37,9 +57,9 @@ export default function AddMoradiaScreen() {
           nome,
           endereco,
           descricao,
-          preco: parseFloat(preco), // O back-end espera um Float
-          latitude: parseFloat(latitude) || 0.0, // GPS
-          longitude: parseFloat(longitude) || 0.0, // GPS
+          preco: parseFloat(preco),
+          latitude: parseFloat(latitude) || 0.0,
+          longitude: parseFloat(longitude) || 0.0,
         })
       });
 
@@ -47,7 +67,6 @@ export default function AddMoradiaScreen() {
 
       if (response.ok) {
         Alert.alert('Sucesso!', 'Moradia cadastrada.');
-        // Limpa os campos e volta para a Home
         setNome('');
         setEndereco('');
         setDescricao('');
@@ -77,8 +96,17 @@ export default function AddMoradiaScreen() {
         <TextInput style={styles.input} placeholder="Endereço" value={endereco} onChangeText={setEndereco} />
         <TextInput style={styles.input} placeholder="Descrição" value={descricao} onChangeText={setDescricao} multiline />
         <TextInput style={styles.input} placeholder="Preço (ex: 750.00)" value={preco} onChangeText={setPreco} keyboardType="numeric" />
-        <TextInput style={styles.input} placeholder="Latitude (Opcional)" value={latitude} onChangeText={setLatitude} keyboardType="numeric" />
-        <TextInput style={styles.input} placeholder="Longitude (Opcional)" value={longitude} onChangeText={setLongitude} keyboardType="numeric" />
+
+        {/* 3. Botão para pegar o GPS */}
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: '#6c757d', marginBottom: 15 }]}
+          onPress={handleGetLocation}
+        >
+          <Text style={styles.buttonText}>📍 Usar Minha Localização Atual</Text>
+        </TouchableOpacity>
+
+        <TextInput style={styles.input} placeholder="Latitude" value={latitude} onChangeText={setLatitude} keyboardType="numeric" />
+        <TextInput style={styles.input} placeholder="Longitude" value={longitude} onChangeText={setLongitude} keyboardType="numeric" />
 
         <TouchableOpacity style={styles.button} onPress={handleAddMoradia} disabled={isLoading}>
           {isLoading ? (
@@ -101,7 +129,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   title: { fontSize: 22, fontWeight: 'bold', textAlign: 'center' },
-  content: { padding: 20 }, // Removido flex: 1
+  content: { padding: 20 },
   input: {
     height: 50,
     backgroundColor: '#fff',
