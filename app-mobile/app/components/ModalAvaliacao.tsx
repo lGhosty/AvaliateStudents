@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
-import { BASE_URL } from '../constants/api';
-import { useAuth } from '../context/AuthContext';
+import { BASE_URL } from '../../constants/api';
+import { useAuth } from '../../context/AuthContext';
 
 interface Props {
   isVisible: boolean;
   onClose: () => void;
   moradiaId: number;
-  onSubmitSuccess: () => void; // Para recarregar os detalhes
+  onSubmitSuccess: () => void;
 }
 
 export function ModalAvaliacao({ isVisible, onClose, moradiaId, onSubmitSuccess }: Props) {
@@ -25,12 +25,11 @@ export function ModalAvaliacao({ isVisible, onClose, moradiaId, onSubmitSuccess 
     
     setIsLoading(true);
     try {
-      // 1. Chamar o back-end para criar a avaliação (Rota Protegida)
       const response = await fetch(`${BASE_URL}/avaliacoes/moradia/${moradiaId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Envia o token
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           nota: notaNum,
@@ -42,7 +41,7 @@ export function ModalAvaliacao({ isVisible, onClose, moradiaId, onSubmitSuccess 
 
       if (response.ok) {
         Alert.alert('Sucesso', 'Avaliação enviada!');
-        onSubmitSuccess(); // Avisa a tela 'details' para recarregar
+        onSubmitSuccess();
         setNota('');
         setComentario('');
         onClose();
@@ -96,58 +95,13 @@ export function ModalAvaliacao({ isVisible, onClose, moradiaId, onSubmitSuccess 
 }
 
 const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    width: '90%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'stretch', // Alinha os inputs
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  input: {
-    height: 50,
-    backgroundColor: '#f5f5f5',
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-    fontSize: 16,
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top', // Para Android
-    paddingTop: 10, // Para iOS
-  },
-  buttonSubmit: {
-    backgroundColor: '#007bff',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  buttonCancel: {
-    marginTop: 10,
-    padding: 10,
-    alignItems: 'center',
-  },
-  buttonCancelText: {
-    color: '#666',
-    fontSize: 16,
-  },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { width: '90%', backgroundColor: 'white', borderRadius: 10, padding: 20, alignItems: 'stretch' },
+  modalTitle: { fontSize: 20, fontWeight: 'bold', textAlign: 'center', marginBottom: 20 },
+  input: { height: 50, backgroundColor: '#f5f5f5', borderColor: '#ddd', borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, marginBottom: 15, fontSize: 16 },
+  textArea: { height: 100, textAlignVertical: 'top', paddingTop: 10 },
+  buttonSubmit: { backgroundColor: '#007bff', padding: 15, borderRadius: 8, alignItems: 'center' },
+  buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  buttonCancel: { marginTop: 10, padding: 10, alignItems: 'center' },
+  buttonCancelText: { color: '#666', fontSize: 16 },
 });
