@@ -8,6 +8,7 @@ import { moradiaRoutes } from './routes/moradia.routes';
 import { avaliacaoRoutes } from './routes/avaliacao.routes';
 import { reservaRoutes } from './routes/reserva.routes';
 import { uploadRoutes } from './routes/upload.routes'; // <-- Importar rota de upload
+import { mensagemRoutes } from './routes/mensagem.routes';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/api/moradias', moradiaRoutes);
 app.use('/api/avaliacoes', avaliacaoRoutes);
 app.use('/api/reservas', reservaRoutes);
 app.use('/api/upload', uploadRoutes); // <-- Registar rota
+app.use('/api/mensagens', mensagemRoutes);
 
 const PORT = 3333;
 app.listen(PORT, () => {
