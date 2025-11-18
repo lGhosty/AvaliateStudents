@@ -10,6 +10,8 @@ interface Props {
   onSubmitSuccess: () => void;
 }
 
+export default ModalAvaliacao;
+
 export function ModalAvaliacao({ isVisible, onClose, moradiaId, onSubmitSuccess }: Props) {
   const { token } = useAuth();
   const [nota, setNota] = useState('');
