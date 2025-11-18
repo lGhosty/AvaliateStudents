@@ -113,13 +113,13 @@ Criar e Aplicar Tabelas (Prisma Migrate):Este comando cria o banco de dados e ap
 Iniciar o servidor:Bashnpm run dev
 ➡ O servidor rodará em: http://localhost:33332️⃣ Configurar o Aplicativo MobileBashcd app-mobile
 npm install
-Ajustar o IP da APIEdite o arquivo:app-mobile/constants/api.ts
-E coloque o IP da máquina na rede local:TypeScriptexport const IP_DO_BACKEND = "192.168.X.X";
+Ajustar o IP da APIEdite o arquivo: app-mobile/constants/api.tsE coloque o IP da máquina na rede local:TypeScriptexport const IP_DO_BACKEND = "192.168.X.X";
 Rodar o aplicativoBashnpx expo start
-📱 Abra o Expo Go e escaneie o QR code.🛠️ Gerenciamento do Banco de Dados (Opcional)Para visualizar e editar os dados diretamente nas tabelas (como Usuario, Moradia, etc.), use um cliente gráfico:Ferramenta Recomendada: DBeaver Community EditionParâmetros de Conexão:Host: localhostPorta: 5432Database: avaliatestudentsUsuário/Senha: postgres/docker📂 Estrutura do BancoTabelaDescriçãoUsuarioLogin, senha (criptografada), foto e papel no sistema.MoradiaInformações do imóvel, localização (GPS) e proprietário.ReservaDatas, status e vínculo aluno → moradia.AvaliacaoNotas e comentários sobre moradias.MensagemEstrutura futura para chat interno.👨‍💻 AutorDesenvolvido por José Fernandes, para a disciplina de Desenvolvimento Mobile/Web
+📱 Abra o Expo Go e escaneie o QR code.🛠️ Gerenciamento do Banco de Dados (Opcional)Para visualizar e editar os dados diretamente nas tabelas (como Usuario, Moradia, etc.), use um cliente gráfico:ConfiguraçãoValorFerramenta RecomendadaDBeaver Community EditionHostlocalhostPorta5432DatabaseavaliatestudentsUsuário/Senhapostgres/docker📂 Estrutura do BancoTabelaDescriçãoUsuarioLogin, senha (criptografada), foto e papel no sistema.MoradiaInformações do imóvel, localização (GPS) e proprietário.ReservaDatas, status e vínculo aluno → moradia.AvaliacaoNotas e comentários sobre moradias.MensagemEstrutura futura para chat interno.👨‍💻 AutorDesenvolvido por José Fernandes, para a disciplina de Desenvolvimento Mobile/Web.
 
-## 📚 Documentação Adicional
+📚 Documentação Adicional
 * 🗂️ **Diagrama de Casos de Uso:*![Diagrama de Casos de Uso](./app-mobile/docs/casos-de-uso.png)
 * 🧩 **Diagrama de Classes:*![Diagrama de Classes](./app-mobile/docs/diagrama-de-classe.png)
 * 📱 **Protótipo Navegável:** *[➡️ Visualizar Protótipo no Figma](https://www.figma.com/design/a7OVs61HbxlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=GlEIy3610zuiOu88-1)*
+
 
