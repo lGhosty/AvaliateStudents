@@ -159,14 +159,26 @@ export default function DetailsScreen() {
             <Ionicons name="arrow-back" size={24} color="#fff" />
           </TouchableOpacity>
 
-          {/* Botão Excluir (Lixeira Direita) - Só aparece se for o dono */}
+          {/* ÁREA DE AÇÕES DO DONO (Direita) */}
           {isDono && (
-             <TouchableOpacity
-               style={[styles.backButton, { left: undefined, right: 20, backgroundColor: '#dc3545' }]}
-               onPress={handleDelete}
-             >
-               <Ionicons name="trash" size={24} color="#fff" />
-             </TouchableOpacity>
+            <View style={styles.actionsContainer}>
+               
+               {/* 1. Botão EDITAR (Novo) */}
+               <TouchableOpacity
+                 style={[styles.actionIcon, { backgroundColor: '#007bff' }]}
+                 onPress={() => router.push({ pathname: '/moradia-edit', params: { id: moradia.id } })}
+               >
+                 <Ionicons name="pencil" size={20} color="#fff" />
+               </TouchableOpacity>
+
+               {/* 2. Botão EXCLUIR (Lixo) */}
+               <TouchableOpacity
+                 style={[styles.actionIcon, { backgroundColor: '#dc3545' }]}
+                 onPress={handleDelete}
+               >
+                 <Ionicons name="trash" size={20} color="#fff" />
+               </TouchableOpacity>
+            </View>
           )}
         </View>
 
@@ -247,17 +259,24 @@ const styles = StyleSheet.create({
   
   imageContainer: { position: 'relative' },
   image: { width: '100%', height: 300 },
+  
   backButton: {
     position: 'absolute',
-    top: 40,
-    left: 20,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    top: 40, left: 20,
+    width: 40, height: 40, borderRadius: 20,
     backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
+    justifyContent: 'center', alignItems: 'center', zIndex: 10,
+  },
+
+  // Estilos para os botões de Editar/Excluir
+  actionsContainer: {
+    position: 'absolute', top: 40, right: 20,
+    flexDirection: 'row', gap: 10, zIndex: 10
+  },
+  actionIcon: {
+    width: 40, height: 40, borderRadius: 20,
+    justifyContent: 'center', alignItems: 'center',
+    shadowColor: "#000", shadowOffset: {width: 0, height: 2}, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5,
   },
 
   content: { padding: 20, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: -20, backgroundColor: '#fff' },

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { AuthService } from '../services/auth.service';
+import { AuthRequest } from '../middleware/auth.middleware'; // Certifique-se que este import existe
 
 const authService = new AuthService();
 
@@ -9,7 +10,6 @@ export class AuthController {
     try {
       const { nome, email, senha } = req.body;
 
-      // CORREÇÃO: Passamos um objeto { } com os dados dentro
       const user = await authService.register({ nome, email, senha });
 
       return res.status(201).json({
@@ -29,6 +29,20 @@ export class AuthController {
       return res.json(result);
     } catch (error) {
       return res.status(401).json({ message: (error as Error).message });
+    }
+  }
+
+  // --- NOVO MÉTODO: Recebe a URL e chama o serviço ---
+  async updateAvatar(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.id; // O ID vem do Token JWT
+      const { avatarUrl } = req.body; // A URL vem do App
+      
+      await authService.updateAvatar(userId, avatarUrl);
+      
+      return res.json({ message: "Avatar atualizado com sucesso!" });
+    } catch (error) {
+      return res.status(400).json({ message: "Erro ao atualizar avatar." });
     }
   }
 }

@@ -5,30 +5,35 @@ import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'expo-router';
 import { BASE_URL } from '../../constants/api';
-// Importar o AsyncStorage para salvar a foto permanentemente
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth(); // <-- Importante: precisamos do 'token'
   const router = useRouter();
   
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 1. Ao carregar a tela, busca a foto salva na memória do telemóvel
+  // 1. Carregar foto (Prioridade: Local > Nuvem > Placeholder)
   useEffect(() => {
     const loadAvatar = async () => {
       try {
-        // Busca uma foto específica para este email de utilizador
+        // Tenta carregar a versão salva no telemóvel (é mais rápido)
         const savedAvatar = await AsyncStorage.getItem(`@avatar:${user?.email}`);
+        
         if (savedAvatar) {
           setAvatarUri(savedAvatar);
+        } else if (user?.avatarUrl) {
+          // Se não tiver local, usa a do banco de dados (nuvem)
+          setAvatarUri(user.avatarUrl);
         }
       } catch (e) {
         console.log('Erro ao carregar foto');
       }
     };
-    loadAvatar();
+    if (user) {
+      loadAvatar();
+    }
   }, [user]);
 
   const handleChoosePhoto = async () => {
@@ -45,41 +50,58 @@ export default function ProfileScreen() {
 
     if (!pickerResult.canceled) {
       const uri = pickerResult.assets[0].uri;
-      setAvatarUri(uri); // Mostra imediatamente
-      handleUploadAvatar(uri); // Faz o upload e salva
+      setAvatarUri(uri); // Mostra imediatamente (feedback rápido)
+      handleUploadAvatar(uri); // Inicia o processo de salvar
     }
   };
 
+  // 2. Função: Upload Físico + Salvar Link no Banco
   const handleUploadAvatar = async (uri: string) => {
     setIsLoading(true);
     try {
+      // A. Upload do ficheiro para a pasta 'uploads' do servidor
       const formData = new FormData();
       const filename = uri.split('/').pop();
       const match = /\.(\w+)$/.exec(filename || '');
       const type = match ? `image/${match[1]}` : `image`;
-
       formData.append('image', { uri, name: filename, type } as any);
 
-      // Envia para o servidor
-      const response = await fetch(`${BASE_URL}/upload`, {
+      const uploadResponse = await fetch(`${BASE_URL}/upload`, {
         method: 'POST',
         body: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        // Monta a URL final
+      if (uploadResponse.ok) {
+        const data = await uploadResponse.json();
         const serverUrl = BASE_URL.replace('/api', '');
         const finalUrl = `${serverUrl}/uploads/${data.filename}`;
         
-        // 2. O SEGREDO: Salvar a URL no AsyncStorage para não sumir
-        await AsyncStorage.setItem(`@avatar:${user?.email}`, finalUrl);
-        
-        Alert.alert("Sucesso", "Foto de perfil atualizada!");
+        // B. Salvar o link no Banco de Dados (Nuvem)
+        const dbResponse = await fetch(`${BASE_URL}/auth/avatar`, {
+          method: 'PATCH',
+          headers: {
+             'Content-Type': 'application/json',
+             'Authorization': `Bearer ${token}` // Autenticação necessária
+          },
+          body: JSON.stringify({ avatarUrl: finalUrl })
+        });
+
+        if (dbResponse.ok) {
+            // C. Salvar no AsyncStorage (Cache local)
+            await AsyncStorage.setItem(`@avatar:${user?.email}`, finalUrl);
+            setAvatarUri(finalUrl);
+            Alert.alert("Sucesso", "Foto salva na sua conta!");
+        } else {
+            throw new Error("Erro ao vincular foto ao usuário.");
+        }
+      } else {
+         throw new Error("Falha no upload do arquivo.");
       }
     } catch (error) {
-      // Se der erro no servidor, salva a local pelo menos para não sumir agora
+      console.log(error);
+      Alert.alert("Aviso", "Não foi possível salvar a foto no servidor. Ela ficará apenas neste dispositivo.");
+      // Fallback: Salva o link local original para não sumir da tela agora
       await AsyncStorage.setItem(`@avatar:${user?.email}`, uri);
     } finally {
       setIsLoading(false);
@@ -93,7 +115,7 @@ export default function ProfileScreen() {
         
         <TouchableOpacity onPress={handleChoosePhoto} style={styles.avatarContainer}>
           {isLoading ? (
-            <View style={[styles.avatar, {justifyContent:'center'}]}><ActivityIndicator color="#fff" /></View>
+            <View style={[styles.avatar, {justifyContent:'center'}]}><ActivityIndicator color="#007bff" /></View>
           ) : avatarUri ? (
             <Image source={{ uri: avatarUri }} style={styles.avatar} />
           ) : (
@@ -137,7 +159,7 @@ const styles = StyleSheet.create({
     content: { alignItems: 'center', padding: 20 },
     title: { fontSize: 28, fontWeight: 'bold', marginBottom: 30, color: '#333' },
     avatarContainer: { alignItems: 'center', marginBottom: 30 },
-    avatar: { width: 120, height: 120, borderRadius: 60, borderWidth: 3, borderColor: '#fff' },
+    avatar: { width: 120, height: 120, borderRadius: 60, borderWidth: 3, borderColor: '#fff', backgroundColor: '#eee' },
     avatarPlaceholder: { width: 120, height: 120, borderRadius: 60, backgroundColor: '#007bff', justifyContent: 'center', alignItems: 'center' },
     avatarText: { color: '#fff', fontSize: 48, fontWeight: 'bold' },
     changePhotoText: { color: '#007bff', marginTop: 10, fontSize: 16 },

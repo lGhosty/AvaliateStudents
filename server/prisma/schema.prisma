@@ -8,12 +8,12 @@ datasource db {
 }
 
 model Usuario {
-  id        Int       @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   nome      String
-  email     String    @unique
+  email     String     @unique
   senha     String
+  role      String     @default("ESTUDANTE")
   avatarUrl String?
-  role      String    @default("ESTUDANTE")
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

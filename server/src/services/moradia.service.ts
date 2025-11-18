@@ -41,7 +41,7 @@ export class MoradiaService {
     const moradia = await prisma.moradia.findUnique({
       where: { id },
       include: {
-        criador: { select: { id: true, nome: true } }, // Incluímos o ID para saber se somos o dono
+        criador: { select: { id: true, nome: true } }, // Inclui ID para saber se é dono
         avaliacoes: {
           include: { autor: { select: { nome: true } } },
           orderBy: { createdAt: 'desc' }
@@ -53,17 +53,10 @@ export class MoradiaService {
 
   // 2. DELETAR MORADIA (Apenas o dono pode)
   async delete(id: number, usuarioId: number): Promise<void> {
-    // Primeiro, verifica se a moradia existe
     const moradia = await prisma.moradia.findUnique({ where: { id } });
     
-    if (!moradia) {
-      throw new Error('Moradia não encontrada.');
-    }
-
-    // Verifica se o utilizador que quer apagar é o dono
-    if (moradia.criadorId !== usuarioId) {
-      throw new Error('Não tem permissão para excluir esta moradia.');
-    }
+    if (!moradia) throw new Error('Moradia não encontrada.');
+    if (moradia.criadorId !== usuarioId) throw new Error('Não tem permissão para excluir esta moradia.');
 
     await prisma.moradia.delete({ where: { id } });
   }
@@ -82,7 +75,10 @@ export class MoradiaService {
         endereco: data.endereco,
         descricao: data.descricao,
         preco: data.preco,
-        // Adicione outros campos se necessário
+        // Agora permite atualizar imagem e localização também
+        imageUrl: data.imageUrl,
+        latitude: data.latitude,
+        longitude: data.longitude
       }
     });
     return updated;

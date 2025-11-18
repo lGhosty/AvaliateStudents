@@ -5,7 +5,6 @@ import { Usuario } from '@prisma/client';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fehapolo';
 
-// Interface para definir o formato dos dados recebidos
 interface RegisterData {
   nome: string;
   email: string;
@@ -14,9 +13,8 @@ interface RegisterData {
 
 export class AuthService {
 
-  // CORREÇÃO: Recebe 'data' que contém tudo
   async register(data: RegisterData): Promise<Omit<Usuario, 'senha'>> {
-    const { nome, email, senha } = data; // Desestrutura o objeto
+    const { nome, email, senha } = data;
     
     if (!nome || !email || !senha) {
        throw new Error("Todos os campos são obrigatórios");
@@ -61,5 +59,14 @@ export class AuthService {
 
     const { senha: _, ...user } = usuario;
     return { token, user };
+  }
+
+  // --- NOVA FUNÇÃO: Salvar a URL da foto no Banco ---
+  async updateAvatar(usuarioId: number, avatarUrl: string): Promise<Usuario> {
+    const usuario = await prisma.usuario.update({
+      where: { id: usuarioId },
+      data: { avatarUrl },
+    });
+    return usuario;
   }
 }
