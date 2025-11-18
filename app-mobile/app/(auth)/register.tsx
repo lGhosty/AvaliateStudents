@@ -12,10 +12,30 @@ export default function RegisterScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = async () => {
+    // 1. Validação: Campos vazios
     if (!nome || !email || !senha) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
+
+    // 2. Validação: Nome muito curto (Evita o "1")
+    if (nome.trim().length < 3) {
+      Alert.alert('Erro', 'O nome deve ter pelo menos 3 letras.');
+      return;
+    }
+
+    // 3. Validação: Email válido (deve ter @ e .)
+    if (!email.includes('@') || !email.includes('.')) {
+      Alert.alert('Erro', 'Por favor, insira um e-mail válido.');
+      return;
+    }
+
+    // 4. Validação: Senha segura
+    if (senha.length < 6) {
+      Alert.alert('Erro', 'A senha deve ter pelo menos 6 caracteres.');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -48,7 +68,7 @@ export default function RegisterScreen() {
       <Text style={styles.title}>Crie sua Conta</Text>
       <TextInput style={styles.input} placeholder="Nome Completo" value={nome} onChangeText={setNome} />
       <TextInput style={styles.input} placeholder="E-mail" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
-      <TextInput style={styles.input} placeholder="Senha" value={senha} onChangeText={setSenha} secureTextEntry />
+      <TextInput style={styles.input} placeholder="Senha (mínimo 6)" value={senha} onChangeText={setSenha} secureTextEntry />
       
       <TouchableOpacity style={styles.button} onPress={handleRegister} disabled={isLoading}>
         {isLoading ? (

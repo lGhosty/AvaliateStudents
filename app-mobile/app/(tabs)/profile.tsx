@@ -5,26 +5,27 @@ import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'expo-router';
 import { BASE_URL } from '../../constants/api';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Importar AsyncStorage
+// Importar o AsyncStorage para salvar a foto permanentemente
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
   const router = useRouter();
   
-  // Tenta usar o avatar do utilizador, ou nulo
-  const [avatarUri, setAvatarUri] = useState<string | null>(user?.avatarUrl || null);
+  const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 1. Ao abrir a tela, tenta carregar a foto salva no telemóvel
+  // 1. Ao carregar a tela, busca a foto salva na memória do telemóvel
   useEffect(() => {
     const loadAvatar = async () => {
       try {
+        // Busca uma foto específica para este email de utilizador
         const savedAvatar = await AsyncStorage.getItem(`@avatar:${user?.email}`);
         if (savedAvatar) {
           setAvatarUri(savedAvatar);
         }
       } catch (e) {
-        console.log('Erro ao carregar avatar local');
+        console.log('Erro ao carregar foto');
       }
     };
     loadAvatar();
@@ -44,13 +45,12 @@ export default function ProfileScreen() {
 
     if (!pickerResult.canceled) {
       const uri = pickerResult.assets[0].uri;
-      setAvatarUri(uri); // Mostra logo para o utilizador
-      uploadAvatar(uri); // Faz o upload em segundo plano
+      setAvatarUri(uri); // Mostra imediatamente
+      handleUploadAvatar(uri); // Faz o upload e salva
     }
   };
 
-  // 2. Função para fazer Upload e Salvar Localmente
-  const uploadAvatar = async (uri: string) => {
+  const handleUploadAvatar = async (uri: string) => {
     setIsLoading(true);
     try {
       const formData = new FormData();
@@ -60,6 +60,7 @@ export default function ProfileScreen() {
 
       formData.append('image', { uri, name: filename, type } as any);
 
+      // Envia para o servidor
       const response = await fetch(`${BASE_URL}/upload`, {
         method: 'POST',
         body: formData,
@@ -68,17 +69,17 @@ export default function ProfileScreen() {
 
       if (response.ok) {
         const data = await response.json();
-        // Constrói a URL final (ex: http://192.168.../uploads/foto.jpg)
+        // Monta a URL final
         const serverUrl = BASE_URL.replace('/api', '');
         const finalUrl = `${serverUrl}/uploads/${data.filename}`;
         
-        // SALVA NO ASYNC STORAGE PARA NÃO SUMIR
+        // 2. O SEGREDO: Salvar a URL no AsyncStorage para não sumir
         await AsyncStorage.setItem(`@avatar:${user?.email}`, finalUrl);
+        
         Alert.alert("Sucesso", "Foto de perfil atualizada!");
       }
     } catch (error) {
-      Alert.alert("Aviso", "Foto definida localmente, mas falha ao enviar para o servidor.");
-      // Mesmo se falhar o upload, salvamos o URI local para o utilizador não perder
+      // Se der erro no servidor, salva a local pelo menos para não sumir agora
       await AsyncStorage.setItem(`@avatar:${user?.email}`, uri);
     } finally {
       setIsLoading(false);
@@ -106,8 +107,10 @@ export default function ProfileScreen() {
         <View style={styles.infoContainer}>
           <Text style={styles.label}>Nome:</Text>
           <Text style={styles.value}>{user?.nome || 'Carregando...'}</Text>
+          
           <Text style={styles.label}>E-mail:</Text>
           <Text style={styles.value}>{user?.email || 'Carregando...'}</Text>
+
           <Text style={styles.label}>Tipo de Conta:</Text>
           <Text style={styles.valueBadge}>{user?.role || 'ESTUDANTE'}</Text>
         </View>
