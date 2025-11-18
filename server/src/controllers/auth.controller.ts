@@ -5,16 +5,23 @@ const authService = new AuthService();
 
 export class AuthController {
   
-  // O controlador agora apenas lida com 'req' e 'res'
   async register(req: Request, res: Response) {
     try {
-      const usuario = await authService.register(req.body);
-      return res.status(201).json(usuario);
+      const { nome, email, senha } = req.body;
+
+      // CORREÇÃO: Passamos um objeto { } com os dados dentro
+      const user = await authService.register({ nome, email, senha });
+
+      return res.status(201).json({
+        message: "Sucesso, usuário criado!",
+        user: { id: user.id, nome: user.nome, email: user.email }
+      });
+      
     } catch (error) {
       return res.status(400).json({ message: (error as Error).message });
     }
   }
-
+    
   async login(req: Request, res: Response) {
     try {
       const { email, senha } = req.body;

@@ -5,11 +5,23 @@ import { Usuario } from '@prisma/client';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fehapolo';
 
+// Interface para definir o formato dos dados recebidos
+interface RegisterData {
+  nome: string;
+  email: string;
+  senha: string;
+}
+
 export class AuthService {
 
-  async register(data: any): Promise<Omit<Usuario, 'senha'>> {
-    const { nome, email, senha } = data;
+  // CORREÇÃO: Recebe 'data' que contém tudo
+  async register(data: RegisterData): Promise<Omit<Usuario, 'senha'>> {
+    const { nome, email, senha } = data; // Desestrutura o objeto
     
+    if (!nome || !email || !senha) {
+       throw new Error("Todos os campos são obrigatórios");
+    }
+
     const emailEmUso = await prisma.usuario.findUnique({ where: { email } });
     if (emailEmUso) {
       throw new Error('Este e-mail já está em uso.');
@@ -44,10 +56,10 @@ export class AuthService {
     const token = jwt.sign(
       { id: usuario.id, role: usuario.role },
       JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '1d' }
     );
 
-    const { senha: _, ...usuarioSemSenha } = usuario;
-    return { token, user: usuarioSemSenha };
+    const { senha: _, ...user } = usuario;
+    return { token, user };
   }
 }
