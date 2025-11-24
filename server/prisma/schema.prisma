@@ -18,10 +18,12 @@ model Usuario {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  moradias   Moradia[]
+  moradias  Moradia[]
   avaliacoes Avaliacao[]
-  reservas   Reserva[]   // <-- NOVA RELAÇÃO
-  mensagens  Mensagem[]  // <-- NOVA RELAÇÃO
+  reservas   Reserva[]
+  
+  mensagensEnviadas   Mensagem[] @relation("mensagensEnviadas")
+  mensagensRecebidas  Mensagem[] @relation("mensagensRecebidas")
 }
 
 model Moradia {
@@ -41,12 +43,13 @@ model Moradia {
   updatedAt DateTime  @updatedAt
 
   avaliacoes Avaliacao[]
-  reservas   Reserva[] // <-- NOVA RELAÇÃO
+  reservas   Reserva[]
+  mensagens  Mensagem[]
 }
 
 model Avaliacao {
   id        Int      @id @default(autoincrement())
-  nota      Float    // O seu schema original tinha Float
+  nota      Float    
   comentario String?
   
   autor     Usuario  @relation(fields: [autorId], references: [id], onDelete: Cascade)
@@ -57,22 +60,20 @@ model Avaliacao {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([moradiaId, autorId]) // Um utilizador só pode avaliar uma moradia uma vez
+  @@unique([moradiaId, autorId])
 }
 
 model Reserva {
   id        Int       @id @default(autoincrement())
   dataEntrada DateTime
   dataSaida   DateTime
-  status    String    @default("PENDENTE") // PENDENTE, CONFIRMADA, CANCELADA
+  status    String    @default("PENDENTE") 
 
   moradia   Moradia   @relation(fields: [moradiaId], references: [id], onDelete: Cascade)
   moradiaId Int
 
   usuario   Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   usuarioId Int
-
-  mensagens Mensagem[] // Uma reserva pode ter várias mensagens
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -82,11 +83,17 @@ model Mensagem {
   id      Int      @id @default(autoincrement())
   texto   String   @db.Text
 
-  autor     Usuario  @relation(fields: [autorId], references: [id], onDelete: Cascade)
-  autorId   Int
+  // Quem enviou
+  remetente      Usuario  @relation("mensagensEnviadas", fields: [remetenteId], references: [id], onDelete: Cascade)
+  remetenteId    Int
 
-  reserva   Reserva  @relation(fields: [reservaId], references: [id], onDelete: Cascade)
-  reservaId Int
+  // Quem recebeu
+  destinatario   Usuario  @relation("mensagensRecebidas", fields: [destinatarioId], references: [id], onDelete: Cascade)
+  destinatarioId Int
+
+  // Sobre qual casa
+  moradia        Moradia  @relation(fields: [moradiaId], references: [id], onDelete: Cascade)
+  moradiaId      Int
 
   createdAt DateTime @default(now())
 }

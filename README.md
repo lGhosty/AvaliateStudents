@@ -1,192 +1,195 @@
-📱 AvaliateStudents — Plataforma de Moradias Universitárias
-
-
-
-
-
+# 📱 AvaliateStudents — Plataforma de Moradias Universitárias
 
 O AvaliateStudents é um sistema full-stack desenvolvido para a disciplina de Desenvolvimento Mobile/Web. A plataforma conecta estudantes a moradias universitárias, permitindo busca, reservas, avaliações e interação entre alunos e proprietários.
 
-📌 Tabela de Conteúdos
+---
 
-Funcionalidades do Aplicativo
+## 📌 Tabela de Conteúdos
 
-Funcionalidades do Servidor
+- [Funcionalidades do Aplicativo](#funcionalidades-do-aplicativo)
+- [Funcionalidades do Servidor](#funcionalidades-do-servidor-back-end)
+- [Tecnologias](#tecnologias)
+- [Como Rodar o Projeto](#como-rodar-o-projeto)
+- [Gerenciamento do Banco de Dados](#gerenciamento-do-banco-de-dados)
+- [Estrutura do Banco](#estrutura-do-banco)
+- [Autor](#autor)
 
-Tecnologias
+---
 
-Como Rodar o Projeto
+## 📱 Funcionalidades do Aplicativo
 
-Gerenciamento do Banco de Dados
+### 🔐 Autenticação
+- Login e Cadastro com validação.
+- Senhas criptografadas e autenticação JWT.
+- Sessão mantida globalmente via Context API.
 
-Estrutura do Banco
+### 👤 Perfil do Usuário
+- Upload de foto via câmera ou galeria.
+- Foto salva no servidor e armazenada localmente.
+- Edição de dados pessoais.
 
-Autor
+### 🏠 Moradias
+- Listagem com filtro de preço.
+- Cadastro de moradia com foto e localização via GPS.
+- Edição e exclusão (somente pelo proprietário).
 
-📱 Funcionalidades do Aplicativo
-🔐 Autenticação
+### 📅 Reservas — Fluxo Completo
+- Aluno solicita reserva informando a data.
+- Dono recebe solicitações em “Gerenciar Aluguéis”.
+- Dono aprova ou rejeita.
+- Aluno acompanha em “Minhas Viagens”.
 
-Login e Cadastro com validação.
+---
 
-Senhas criptografadas e autenticação JWT.
+## 💻 Funcionalidades do Servidor (Back-end)
+- API REST completa com Node.js + Express.
+- Banco PostgreSQL com Prisma ORM.
+- Upload de imagens com Multer.
+- Tokens JWT + criptografia Bcrypt.
+- Docker integrado para o banco.
+- Estrutura pronta para chat entre usuários.
 
-Sessão mantida globalmente via Context API.
+---
 
-👤 Perfil do Usuário
+## 🛠 Tecnologias
 
-Upload de foto via câmera ou galeria.
+**Front-end (Mobile)**
+- React Native (Expo)
+- TypeScript
+- React Navigation
+- Axios
+- Expo Image Picker
+- Expo Location
 
-Foto salva no servidor e armazenada localmente.
+**Back-end (API)**
+- Node.js + Express
+- TypeScript
+- Prisma ORM
+- Multer
+- JWT
+- Bcrypt
 
-Edição de dados pessoais.
+**Banco & Infra**
+- PostgreSQL
+- Docker (opcional)
+- Prisma Migrate
 
-🏠 Moradias
+---
 
-Listagem com filtro de preço.
+## 🚀 Como Rodar o Projeto
 
-Cadastro de moradia com foto e localização via GPS.
+### 📌 Pré-requisitos
+- Node.js (v18+)
+- PostgreSQL (ou Docker)
+- Expo Go no celular ou emulador
 
-Edição e exclusão (somente pelo proprietário).
+---
 
-📅 Reservas — Fluxo Completo
+### 1️⃣ Configurar o Back-end
 
-Aluno solicita reserva informando a data.
+1. Abra o terminal e vá para a pasta do backend:
 
-Dono recebe solicitações em “Gerenciar Aluguéis”.
-
-Dono aprova ou rejeita.
-
-Aluno acompanha em “Minhas Viagens”.
-
-💻 Funcionalidades do Servidor (Back-end)
-
-API REST completa com Node.js + Express.
-
-Banco PostgreSQL com Prisma ORM.
-
-Upload de imagens com Multer.
-
-Tokens JWT + criptografia Bcrypt.
-
-Docker integrado para o banco.
-
-Estrutura pronta para chat entre usuários.
-
-🛠 Tecnologias
-Front-end (Mobile)
-
-React Native (Expo)
-
-TypeScript
-
-React Navigation
-
-Axios
-
-Expo Image Picker
-
-Expo Location
-
-Back-end (API)
-
-Node.js + Express
-
-TypeScript
-
-Prisma ORM
-
-Multer
-
-JWT
-
-Bcrypt
-
-Banco & Infra
-
-PostgreSQL
-
-Docker
-
-Prisma Migrate
-
-🚀 Como Rodar o Projeto
-📌 Pré-requisitos
-
-Node.js (v18+)
-
-Docker ou PostgreSQL
-
-App Expo Go ou Emulador
-
-1️⃣ Configurar o Back-end
+```bash
 cd server
-npm install
+Instale as dependências:
 
+bash
+Copiar código
+npm install
+⚠️ Dica para Windows/VS Code:
+Se aparecer erro "npm não é reconhecido", feche o VS Code, abra novamente ou execute Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser no PowerShell como administrador.
 
 Criar o arquivo .env:
 
-DATABASE_URL="postgresql://postgres:docker@localhost:5432/avaliatestudents?schema=public"
+env
+Copiar código
+DATABASE_URL="postgresql://postgres:12345@localhost:5432/avaliatestudents?schema=public"
 JWT_SECRET="sua_chave_secreta"
+Substitua 12345 pela senha que você quer definir para o PostgreSQL.
 
+2️⃣ Configurar o Banco de Dados
+Opção 1: PostgreSQL local (sem Docker)
 
-Subir o banco com Docker:
+Abra o SQL Shell (psql) ou PgAdmin 4.
 
-docker run --name avalia-db \
-  -e POSTGRES_PASSWORD=docker \
-  -p 5432:5432 \
-  -d postgres:14
+Crie/alterar usuário postgres:
 
+sql
+Copiar código
+ALTER USER postgres PASSWORD '12345';
+Crie o banco:
 
-Criar e aplicar tabelas (Prisma Migrate):
+sql
+Copiar código
+CREATE DATABASE avaliatestudents;
+Opção 2: Usando Docker
 
+bash
+Copiar código
+docker run --name avalia-db -e POSTGRES_PASSWORD=12345 -p 5432:5432 -d postgres:14
+3️⃣ Criar e aplicar tabelas (Prisma Migrate)
+No terminal do backend:
+
+bash
+Copiar código
 npx prisma migrate dev --name init
+⚠️ Se npx não funcionar, use npm exec prisma migrate dev --name init
 
+Isso vai criar todas as tabelas e gerar o Prisma Client.
 
-Iniciar o servidor:
-
+4️⃣ Iniciar o servidor
+bash
+Copiar código
 npm run dev
+O servidor estará disponível em: http://localhost:3333
 
+5️⃣ Configurar o Aplicativo Mobile
+Vá para a pasta do app:
 
-➡ O servidor rodará em: http://localhost:3333
-
-2️⃣ Configurar o Aplicativo Mobile
+bash
+Copiar código
 cd app-mobile
+Instale as dependências:
+
+bash
+Copiar código
 npm install
+Ajuste o IP do backend no arquivo app-mobile/constants/api.ts:
 
+ts
+Copiar código
+export const IP_DO_BACKEND = "192.168.X.X"; // IP da sua máquina na rede local
+Rode o aplicativo:
 
-Ajustar o IP da API:
-
-Edite o arquivo app-mobile/constants/api.ts e coloque o IP da máquina na rede local:
-
-export const IP_DO_BACKEND = "192.168.X.X";
-
-
-Rodar o aplicativo:
-
+bash
+Copiar código
 npx expo start
-
-
-📱 Abra o Expo Go e escaneie o QR code.
+Abra o Expo Go no celular e escaneie o QR code.
 
 🛠️ Gerenciamento do Banco de Dados (Opcional)
+Para visualizar ou editar dados diretamente:
 
-Para visualizar e editar os dados diretamente nas tabelas (como Usuario, Moradia, etc.), use um cliente gráfico:
+Ferramenta recomendada: PgAdmin 4 ou DBeaver
 
-Configuração	Valor
-Ferramenta Recomendada	DBeaver Community Edition
-Host	localhost
-Porta	5432
-Database	avaliatestudents
-Usuário/Senha	postgres/docker
+Configurações:
+
+Host: localhost
+
+Porta: 5432
+
+Database: avaliatestudents
+
+Usuário/Senha: postgres/12345
+
 📂 Estrutura do Banco
 Tabela	Descrição
-Usuario	Login, senha (criptografada), foto e papel no sistema.
-Moradia	Informações do imóvel, localização (GPS) e proprietário.
-Reserva	Datas, status e vínculo aluno → moradia.
-Avaliacao	Notas e comentários sobre moradias.
-Mensagem	Estrutura futura para chat interno.
-👨‍💻 Autor
+Usuario	Login, senha (criptografada), foto e papel no sistema
+Moradia	Informações do imóvel, localização (GPS) e proprietário
+Reserva	Datas, status e vínculo aluno → moradia
+Avaliacao	Notas e comentários sobre moradias
+Mensagem	Estrutura futura para chat interno
 
+👨‍💻 Autor
 Desenvolvido por José Fernandes, para a disciplina de Desenvolvimento Mobile/Web.
 
 📚 Documentação Adicional
