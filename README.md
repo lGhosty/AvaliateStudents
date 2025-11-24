@@ -220,16 +220,17 @@ npm test
 ## 📚 Documentação Visual
 
 ### 🧪 Evidências dos Testes
-![Evidência dos Testes](./app-mobile/docs/testes-att.png)
+![Evidência dos Testes](app-mobile/docs/testes-att.png)
 
 ### 🗂️ Diagrama de Casos de Uso
-![Diagrama de Casos de Uso](./app-mobile/docs/casos-de-usos.png)
+![Diagrama de Casos de Uso](app-mobile/docs/casos-de-usos.png)
 
 ### 🧩 Diagrama de Classes
-![Diagrama de Classes](./app-mobile/docs/diagrama-de-classes.png)
+![Diagrama de Classes](app-mobile/docs/diagrama-de-classes.png)
 
 ### 📱 Protótipo Navegável
 > [➡️ Clique aqui para acessar o Figma](https://www.figma.com/design/a7OVs61HbxlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=GlEIy3610zuiOu88-1)
+
 
 ------------------------------------------------------------------------
 
