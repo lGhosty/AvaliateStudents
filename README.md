@@ -1,6 +1,7 @@
 # 📱 AvaliateStudents — Plataforma de Moradias Universitárias
 
-O AvaliateStudents é um sistema full-stack desenvolvido para a disciplina de Desenvolvimento Mobile/Web. A plataforma conecta estudantes a moradias universitárias, permitindo busca, reservas, avaliações e interação entre alunos e proprietários.
+O AvaliateStudents é um sistema full-stack desenvolvido para a disciplina de **Desenvolvimento Mobile/Web**.  
+A plataforma conecta estudantes a moradias universitárias, permitindo busca, reservas, avaliações e interação entre alunos e proprietários.
 
 ---
 
@@ -12,6 +13,8 @@ O AvaliateStudents é um sistema full-stack desenvolvido para a disciplina de De
 - [Como Rodar o Projeto](#como-rodar-o-projeto)
 - [Gerenciamento do Banco de Dados](#gerenciamento-do-banco-de-dados)
 - [Estrutura do Banco](#estrutura-do-banco)
+- [Guia de Execução dos Testes Automatizados](#guia-de-execução-dos-testes-automatizados-vv)
+- [Documentação Adicional](#documentação-adicional)
 - [Autor](#autor)
 
 ---
@@ -19,60 +22,60 @@ O AvaliateStudents é um sistema full-stack desenvolvido para a disciplina de De
 ## 📱 Funcionalidades do Aplicativo
 
 ### 🔐 Autenticação
-- Login e Cadastro com validação.
-- Senhas criptografadas e autenticação JWT.
-- Sessão mantida globalmente via Context API.
+- Login e cadastro com validação
+- Senhas criptografadas e autenticação JWT
+- Sessão mantida globalmente via Context API
 
 ### 👤 Perfil do Usuário
-- Upload de foto via câmera ou galeria.
-- Foto salva no servidor e armazenada localmente.
-- Edição de dados pessoais.
+- Upload de foto via câmera ou galeria
+- Foto salva no servidor e armazenada localmente
+- Edição de dados pessoais
 
 ### 🏠 Moradias
-- Listagem com filtro de preço.
-- Cadastro de moradia com foto e localização via GPS.
-- Edição e exclusão (somente pelo proprietário).
+- Listagem com filtro de preço
+- Cadastro de moradia com foto e localização via GPS
+- Edição e exclusão (somente pelo proprietário)
 
 ### 📅 Reservas — Fluxo Completo
-- Aluno solicita reserva informando a data.
-- Dono recebe solicitações em “Gerenciar Aluguéis”.
-- Dono aprova ou rejeita.
-- Aluno acompanha em “Minhas Viagens”.
+- Aluno solicita reserva informando a data
+- Dono recebe solicitações em “Gerenciar Aluguéis”
+- Dono aprova ou rejeita
+- Aluno acompanha em “Minhas Viagens”
 
 ---
 
 ## 💻 Funcionalidades do Servidor (Back-end)
-- API REST completa com Node.js + Express.
-- Banco PostgreSQL com Prisma ORM.
-- Upload de imagens com Multer.
-- Tokens JWT + criptografia Bcrypt.
-- Docker integrado para o banco.
-- Estrutura pronta para chat entre usuários.
+- API REST completa com Node.js + Express
+- Banco PostgreSQL com Prisma ORM
+- Upload de imagens com Multer
+- Tokens JWT + criptografia Bcrypt
+- Docker integrado para o banco
+- Estrutura pronta para chat entre usuários
 
 ---
 
 ## 🛠 Tecnologias
 
-**Front-end (Mobile)**
-- React Native (Expo)
-- TypeScript
-- React Navigation
-- Axios
-- Expo Image Picker
-- Expo Location
+**Front-end (Mobile)**  
+- React Native (Expo)  
+- TypeScript  
+- React Navigation  
+- Axios  
+- Expo Image Picker  
+- Expo Location  
 
-**Back-end (API)**
-- Node.js + Express
-- TypeScript
-- Prisma ORM
-- Multer
-- JWT
-- Bcrypt
+**Back-end (API)**  
+- Node.js + Express  
+- TypeScript  
+- Prisma ORM  
+- Multer  
+- JWT  
+- Bcrypt  
 
-**Banco & Infra**
-- PostgreSQL
-- Docker (opcional)
-- Prisma Migrate
+**Banco & Infra**  
+- PostgreSQL  
+- Docker (opcional)  
+- Prisma Migrate  
 
 ---
 
@@ -97,8 +100,11 @@ bash
 Copiar código
 npm install
 ⚠️ Dica para Windows/VS Code:
-Se aparecer erro "npm não é reconhecido", feche o VS Code, abra novamente ou execute Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser no PowerShell como administrador.
+Se aparecer erro "npm não é reconhecido", feche o VS Code, abra novamente ou execute:
 
+powershell
+Copiar código
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 Criar o arquivo .env:
 
 env
@@ -133,9 +139,12 @@ No terminal do backend:
 bash
 Copiar código
 npx prisma migrate dev --name init
-⚠️ Se npx não funcionar, use npm exec prisma migrate dev --name init
+⚠️ Se npx não funcionar, use:
 
-Isso vai criar todas as tabelas e gerar o Prisma Client.
+bash
+Copiar código
+npm exec prisma migrate dev --name init
+Isso cria todas as tabelas e gera o Prisma Client.
 
 4️⃣ Iniciar o servidor
 bash
@@ -189,48 +198,35 @@ Reserva	Datas, status e vínculo aluno → moradia
 Avaliacao	Notas e comentários sobre moradias
 Mensagem	Estrutura futura para chat interno
 
+🧪 Guia de Execução dos Testes Automatizados (V&V)
+Este projeto implementa uma suíte de testes automatizados para garantir a qualidade de software.
+Os testes cobrem tanto a lógica unitária (Services) quanto a integração das rotas (API).
 
-# 🧪 Guia de Execução dos Testes Automatizados (V&V)
+📌 Pré-requisitos
+Node.js (Versão 18 ou superior)
 
-Este projeto implementa uma suíte de testes automatizados para garantir a qualidade de software, atendendo aos requisitos da disciplina de **Verificação e Validação (V&V)**.  
-Os testes cobrem tanto a lógica unitária (**Services**) quanto a integração das rotas (**API**).
+NPM
 
----
+Nota: Os testes utilizam Mocks do banco de dados, então não é necessário ter Docker/PostgreSQL rodando para executá-los.
 
-## 📌 Pré-requisitos
+🚀 Passo a Passo
+Acesse o diretório do servidor:
 
-Para executar os testes, é necessário ter instalado na máquina:
-
-- Node.js (Versão 18 ou superior)  
-- NPM (Gerenciador de pacotes do Node)
-
-> **Nota:** Como os testes utilizam Mocks (simulações) para o Banco de Dados, não é obrigatório ter o Docker/PostgreSQL rodando apenas para executar os testes. Isso agiliza a verificação.
-
----
-
-## 🚀 Passo a Passo
-
-### 1️⃣ Acesse o diretório do Servidor
-
-Os testes estão localizados no **Back-end**. Abra o terminal e entre na pasta correta:
-
-```bash
+bash
+Copiar código
 cd server
-2️⃣ Instale as dependências
-Caso seja a primeira vez que está executando o projeto, instale as bibliotecas necessárias (incluindo Jest e Supertest):
+Instale as dependências (Jest, Supertest, etc.):
 
 bash
 Copiar código
 npm install
-3️⃣ Execute o comando de teste
-O projeto possui um script configurado no package.json para rodar o Jest automaticamente:
+Execute os testes:
 
 bash
 Copiar código
 npm test
 📊 Interpretando os Resultados
-Após rodar o comando, o terminal exibirá o relatório de execução.
-O resultado esperado é todos os testes passando (verde):
+Exemplo de saída esperada:
 
 bash
 Copiar código
@@ -243,35 +239,22 @@ Tests:       9 passed, 9 total
 Snapshots:   0 total
 Time:        1.811 s
 Ran all test suites.
-🛠 O que está sendo testado?
+🛠 O que está sendo testado
 Testes de Unidade (unit/*.spec.ts)
-Isolam a lógica de negócio (Services)
 
-Verificam regras como:
+Lógica de negócio isolada
 
-Cadastro de usuário
+Cadastro de usuário, bloqueio de e-mails duplicados, criação de moradias, permissões de exclusão
 
-Bloqueio de e-mails duplicados
-
-Criação de moradias
-
-Permissões de exclusão
-
-Utilizam Mocks do Prisma para não afetar o banco de dados real
+Utilizam Mocks do Prisma para não afetar o banco real
 
 Testes de Integração (integration/*.spec.ts)
-Testam as rotas da API (/register e /login)
 
-Simulam requisições HTTP reais usando a biblioteca Supertest
+Rotas da API (/register e /login)
 
-Garantem que o servidor:
+Simulação de requisições HTTP reais via Supertest
 
-Recebe o JSON corretamente
-
-Processa e devolve o Código HTTP correto (200, 201, 400)
-
-👨‍💻 Autor
-Desenvolvido por José Fernandes, para a disciplina de Desenvolvimento Mobile/Web.
+Verificação de JSON recebido e códigos HTTP corretos (200, 201, 400)
 
 📚 Documentação Adicional
 
