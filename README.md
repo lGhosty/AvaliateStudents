@@ -1,264 +1,239 @@
-# 📱 AvaliateStudents — Plataforma de Moradias Universitárias
+# 📱 AvaliateStudents --- Plataforma de Moradias Universitárias
 
-O AvaliateStudents é um sistema full-stack desenvolvido para a disciplina de **Desenvolvimento Mobile/Web**.  
-A plataforma conecta estudantes a moradias universitárias, permitindo busca, reservas, avaliações e interação entre alunos e proprietários.
+![Status](https://img.shields.io/badge/status-entregue-green)
+![Tecnologia](https://img.shields.io/badge/tecnologia-full--stack-blue)
+![Plataforma](https://img.shields.io/badge/plataforma-mobile-lightgrey)
 
----
+O **AvaliateStudents** é um sistema **full-stack** desenvolvido para a
+disciplina de *Desenvolvimento Mobile/Web*.\
+A plataforma conecta **estudantes** a **moradias universitárias**,
+permitindo busca, reservas, avaliações e interação entre alunos e
+proprietários.
+
+------------------------------------------------------------------------
 
 ## 📌 Tabela de Conteúdos
 
-- [Funcionalidades do Aplicativo](#funcionalidades-do-aplicativo)
-- [Funcionalidades do Servidor](#funcionalidades-do-servidor-back-end)
-- [Tecnologias](#tecnologias)
-- [Como Rodar o Projeto](#como-rodar-o-projeto)
-- [Gerenciamento do Banco de Dados](#gerenciamento-do-banco-de-dados)
-- [Estrutura do Banco](#estrutura-do-banco)
-- [Guia de Execução dos Testes Automatizados](#guia-de-execução-dos-testes-automatizados-vv)
-- [Documentação Adicional](#documentação-adicional)
-- [Autor](#autor)
+1.  Funcionalidades do Aplicativo\
+2.  Funcionalidades do Servidor (Back-end)\
+3.  Tecnologias\
+4.  Como Rodar o Projeto\
+5.  Gerenciamento do Banco de Dados\
+6.  Estrutura do Banco\
+7.  Testes Automatizados\
+8.  Documentação Visual\
+9.  Autor
 
----
+------------------------------------------------------------------------
 
 ## 📱 Funcionalidades do Aplicativo
 
 ### 🔐 Autenticação
-- Login e cadastro com validação
-- Senhas criptografadas e autenticação JWT
-- Sessão mantida globalmente via Context API
+
+-   Login e Cadastro com validação
+-   Senhas criptografadas (bcrypt)
+-   Sessão via JWT + Context API
 
 ### 👤 Perfil do Usuário
-- Upload de foto via câmera ou galeria
-- Foto salva no servidor e armazenada localmente
-- Edição de dados pessoais
+
+-   Upload de foto (Câmera/Galeria)
+-   Cache local
+-   Edição de perfil
 
 ### 🏠 Moradias
-- Listagem com filtro de preço
-- Cadastro de moradia com foto e localização via GPS
-- Edição e exclusão (somente pelo proprietário)
 
-### 📅 Reservas — Fluxo Completo
-- Aluno solicita reserva informando a data
-- Dono recebe solicitações em “Gerenciar Aluguéis”
-- Dono aprova ou rejeita
-- Aluno acompanha em “Minhas Viagens”
+-   Lista e busca com filtros
+-   Cadastro com fotos e GPS
+-   Edição e exclusão pelo proprietário
 
----
+### 📅 Reservas
+
+Fluxo completo aluno ↔ proprietário\
+- Solicitação de datas\
+- Aprovação/Rejeição\
+- Acompanhamento pelo aluno
+
+------------------------------------------------------------------------
 
 ## 💻 Funcionalidades do Servidor (Back-end)
-- API REST completa com Node.js + Express
-- Banco PostgreSQL com Prisma ORM
-- Upload de imagens com Multer
-- Tokens JWT + criptografia Bcrypt
-- Docker integrado para o banco
-- Estrutura pronta para chat entre usuários
 
----
+-   API REST com Express + TypeScript\
+-   Prisma ORM (PostgreSQL)\
+-   Upload de imagens com Multer\
+-   Autenticação JWT\
+-   Estrutura para chat interno
+
+------------------------------------------------------------------------
 
 ## 🛠 Tecnologias
 
-**Front-end (Mobile)**  
-- React Native (Expo)  
-- TypeScript  
-- React Navigation  
-- Axios  
-- Expo Image Picker  
-- Expo Location  
+  Categoria      Tecnologias
+  -------------- ----------------------------------------------------
+  **Mobile**     React Native (Expo), TypeScript, Navigation, Axios
+  **Back-end**   Node.js, Express, TypeScript, Prisma, Multer, JWT
+  **Infra**      PostgreSQL, Docker
 
-**Back-end (API)**  
-- Node.js + Express  
-- TypeScript  
-- Prisma ORM  
-- Multer  
-- JWT  
-- Bcrypt  
+------------------------------------------------------------------------
 
-**Banco & Infra**  
-- PostgreSQL  
-- Docker (opcional)  
-- Prisma Migrate  
+# 🚀 Como Rodar o Projeto
 
----
+## 📌 Pré-requisitos
 
-## 🚀 Como Rodar o Projeto
+-   Node.js (v18+)\
+-   PostgreSQL ou Docker\
+-   Expo Go ou Emulador
 
-### 📌 Pré-requisitos
-- Node.js (v18+)
-- PostgreSQL (ou Docker)
-- Expo Go no celular ou emulador
+------------------------------------------------------------------------
 
----
+# 1️⃣ Configurar o Back-end
 
-### 1️⃣ Configurar o Back-end
+### 1. Instalar dependências
 
-1. Abra o terminal e vá para a pasta do backend:
-
-```bash
+``` bash
 cd server
-Instale as dependências:
-
-bash
-Copiar código
 npm install
-⚠️ Dica para Windows/VS Code:
-Se aparecer erro "npm não é reconhecido", feche o VS Code, abra novamente ou execute:
+```
 
-powershell
-Copiar código
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-Criar o arquivo .env:
+### 2. Criar arquivo `.env` dentro de `/server`
 
-env
-Copiar código
+``` env
 DATABASE_URL="postgresql://postgres:12345@localhost:5432/avaliatestudents?schema=public"
 JWT_SECRET="sua_chave_secreta"
-Substitua 12345 pela senha que você quer definir para o PostgreSQL.
+```
 
-2️⃣ Configurar o Banco de Dados
-Opção 1: PostgreSQL local (sem Docker)
+> Substitua **12345** pela senha do seu PostgreSQL.
 
-Abra o SQL Shell (psql) ou PgAdmin 4.
+------------------------------------------------------------------------
 
-Crie/alterar usuário postgres:
+# 2️⃣ Configurar o Banco de Dados
 
-sql
-Copiar código
-ALTER USER postgres PASSWORD '12345';
-Crie o banco:
+## ✅ Opção A --- Docker (recomendado)
 
-sql
-Copiar código
-CREATE DATABASE avaliatestudents;
-Opção 2: Usando Docker
-
-bash
-Copiar código
+``` bash
 docker run --name avalia-db -e POSTGRES_PASSWORD=12345 -p 5432:5432 -d postgres:14
-3️⃣ Criar e aplicar tabelas (Prisma Migrate)
-No terminal do backend:
+```
 
-bash
-Copiar código
+## ✅ Opção B --- Banco local
+
+``` sql
+CREATE DATABASE avaliatestudents;
+ALTER USER postgres PASSWORD '12345';
+```
+
+------------------------------------------------------------------------
+
+# 3️⃣ Criar Tabelas (Migrations)
+
+``` bash
 npx prisma migrate dev --name init
-⚠️ Se npx não funcionar, use:
+```
 
-bash
-Copiar código
+Se npx falhar:
+
+``` bash
 npm exec prisma migrate dev --name init
-Isso cria todas as tabelas e gera o Prisma Client.
+```
 
-4️⃣ Iniciar o servidor
-bash
-Copiar código
+------------------------------------------------------------------------
+
+# 4️⃣ Iniciar o Servidor
+
+``` bash
 npm run dev
-O servidor estará disponível em: http://localhost:3333
+```
 
-5️⃣ Configurar o Aplicativo Mobile
-Vá para a pasta do app:
+Servidor disponível em:\
+👉 http://localhost:3333
 
-bash
-Copiar código
+------------------------------------------------------------------------
+
+# 5️⃣ Configurar o Aplicativo Mobile
+
+### Instalar dependências
+
+``` bash
 cd app-mobile
-Instale as dependências:
-
-bash
-Copiar código
 npm install
-Ajuste o IP do backend no arquivo app-mobile/constants/api.ts:
+```
 
-ts
-Copiar código
-export const IP_DO_BACKEND = "192.168.X.X"; // IP da sua máquina na rede local
-Rode o aplicativo:
+### Ajustar IP do servidor
 
-bash
-Copiar código
+Arquivo: `app-mobile/constants/api.ts`
+
+``` ts
+export const IP_DO_BACKEND = "192.168.X.X";
+```
+
+### Executar o app
+
+``` bash
 npx expo start
-Abra o Expo Go no celular e escaneie o QR code.
+```
 
-🛠️ Gerenciamento do Banco de Dados (Opcional)
-Para visualizar ou editar dados diretamente:
+Abra o **Expo Go** e escaneie o QR Code.
 
-Ferramenta recomendada: PgAdmin 4 ou DBeaver
+------------------------------------------------------------------------
 
-Configurações:
+# 🛠 Gerenciamento opcional via PgAdmin/DBeaver
 
-Host: localhost
+    Host: localhost
+    Porta: 5432
+    Database: avaliatestudents
+    Usuário: postgres
+    Senha: 12345
 
-Porta: 5432
+------------------------------------------------------------------------
 
-Database: avaliatestudents
+# 📂 Estrutura do Banco
 
-Usuário/Senha: postgres/12345
+  Tabela      Descrição
+  ----------- ---------------------------
+  Usuario     Login, senha, foto, papel
+  Moradia     Imóvel, GPS, proprietário
+  Reserva     Datas, status
+  Avaliacao   Nota e comentário
+  Mensagem    Chat interno
 
-📂 Estrutura do Banco
-Tabela	Descrição
-Usuario	Login, senha (criptografada), foto e papel no sistema
-Moradia	Informações do imóvel, localização (GPS) e proprietário
-Reserva	Datas, status e vínculo aluno → moradia
-Avaliacao	Notas e comentários sobre moradias
-Mensagem	Estrutura futura para chat interno
+------------------------------------------------------------------------
 
-🧪 Guia de Execução dos Testes Automatizados (V&V)
-Este projeto implementa uma suíte de testes automatizados para garantir a qualidade de software.
-Os testes cobrem tanto a lógica unitária (Services) quanto a integração das rotas (API).
+# 🧪 Testes Automatizados
 
-📌 Pré-requisitos
-Node.js (Versão 18 ou superior)
+### Rodar testes
 
-NPM
-
-Nota: Os testes utilizam Mocks do banco de dados, então não é necessário ter Docker/PostgreSQL rodando para executá-los.
-
-🚀 Passo a Passo
-Acesse o diretório do servidor:
-
-bash
-Copiar código
+``` bash
 cd server
-Instale as dependências (Jest, Supertest, etc.):
-
-bash
-Copiar código
 npm install
-Execute os testes:
-
-bash
-Copiar código
 npm test
-📊 Interpretando os Resultados
-Exemplo de saída esperada:
+```
 
-bash
-Copiar código
-PASS  src/__tests__/unit/moradia.service.spec.ts
-PASS  src/__tests__/unit/auth.service.spec.ts
-PASS  src/__tests__/integration/auth.routes.spec.ts
+### Exemplo de saída
 
-Test Suites: 3 passed, 3 total
-Tests:       9 passed, 9 total
-Snapshots:   0 total
-Time:        1.811 s
-Ran all test suites.
-🛠 O que está sendo testado
-Testes de Unidade (unit/*.spec.ts)
+    PASS src/__tests__/unit/moradia.service.spec.ts
+    PASS src/__tests__/unit/auth.service.spec.ts
+    PASS src/__tests__/integration/auth.routes.spec.ts
 
-Lógica de negócio isolada
+    Test Suites: 3 passed
+    Tests: 9 passed
 
-Cadastro de usuário, bloqueio de e-mails duplicados, criação de moradias, permissões de exclusão
+------------------------------------------------------------------------
 
-Utilizam Mocks do Prisma para não afetar o banco real
+## 📚 Documentação Visual
 
-Testes de Integração (integration/*.spec.ts)
+### 🧪 Evidências dos Testes
+![Evidência dos Testes](./app-mobile/docs/testes-att.png)
 
-Rotas da API (/register e /login)
+### 🗂️ Diagrama de Casos de Uso
+![Diagrama de Casos de Uso](./app-mobile/docs/casos-de-usos.png)
 
-Simulação de requisições HTTP reais via Supertest
+### 🧩 Diagrama de Classes
+![Diagrama de Classes](./app-mobile/docs/diagrama-de-classes.png)
 
-Verificação de JSON recebido e códigos HTTP corretos (200, 201, 400)
+### 📱 Protótipo Navegável
+> [➡️ Clique aqui para acessar o Figma](https://www.figma.com/design/a7OVs61HbxlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=GlEIy3610zuiOu88-1)
 
-📚 Documentação Adicional
+------------------------------------------------------------------------
 
-* 🗂️ **Diagrama de Casos de Uso:*![Testes de Unidade,Teste de integração](./app-mobile/docs/testes.png)
-* 🗂️ **Diagrama de Casos de Uso:*![Diagrama de Casos de Uso](./app-mobile/docs/casos-de-uso.png)
-* 🧩 **Diagrama de Classes:*![Diagrama de Classes](./app-mobile/docs/diagrama-de-classe.png)
-* 📱 **Protótipo Navegável:** *[➡️ Visualizar Protótipo no Figma](https://www.figma.com/design/a7OVs61HbxlT3c3tP8GyXr/Sem-t%C3%ADtulo?node-id=2-170&t=GlEIy3610zuiOu88-1)*
+# 👨‍💻 Autor
+
+Desenvolvido por **José Fernandes**, para a disciplina de
+*Desenvolvimento Mobile/Web*.
