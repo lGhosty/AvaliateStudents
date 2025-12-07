@@ -196,15 +196,22 @@ Abra o **Expo Go** e escaneie o QR Code.
 
 ------------------------------------------------------------------------
 
-# 🧪 Testes Automatizados
+## 🧪 Guia de Execução dos Testes Automatizados (V&V)
 
-### Rodar testes
+Este projeto implementa uma suíte completa de testes para garantir a qualidade de software (Unitários, Integração e Sistema).
 
-``` bash
-cd server
-npm install
+### 1️⃣ Testes de Unidade e Integração (Back-end)
+Estes testes validam a lógica de negócio (Services) e as Rotas da API (`/register`, `/login`).
+
+1. Acesse a pasta do servidor:
+   ```bash
+   cd server
+   npm install
+Execute o comando:
+
+Bash
+
 npm test
-```
 
 ### Exemplo de saída
 
@@ -214,6 +221,38 @@ npm test
 
     Test Suites: 3 passed
     Tests: 9 passed
+
+2️⃣ Testes de Sistema E2E (Front-end - Entrega 03)
+Utilizamos o Cypress para simular um usuário real navegando no aplicativo (Cadastro, Login, Reserva, Perfil).
+
+Atenção: Para rodar estes testes, é necessário manter 3 terminais abertos simultaneamente.
+
+Passo 1: Iniciar o Back-end (Terminal 1)
+
+Bash
+
+cd server
+npm run dev
+Passo 2: Iniciar o Front-end Web (Terminal 2)
+
+Bash
+
+cd app-mobile
+npx expo start --web
+Passo 3: Abrir o Cypress (Terminal 3)
+
+Bash
+
+cd app-mobile
+npx cypress open
+Na janela que abrir, escolha "E2E Testing" > "Chrome" > Clique em sistema.cy.js.
+
+📊 Cobertura dos Testes
+Unidade: Lógica isolada (Cadastro, Moradia, Validações).
+
+Integração: Rotas da API e códigos HTTP.
+
+Sistema (E2E): Fluxo completo do usuário (Cadastro -> Login -> Home -> Reserva -> Logout).
 
 ------------------------------------------------------------------------
 
